@@ -11,6 +11,7 @@
     - Business Case_INTEGRATING PARSONS PUZZLE INTO MYUNI
     - Milestone1-Report
     - Testing_plan_Team27
+    - MilestoneFinalPlan_Team27
   
   - Meetings Minutes: Meeting Minutes_Team 27
                           
