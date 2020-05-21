@@ -1,0 +1,470 @@
+/** start old stylesheet
+@import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
+.h5p-content {
+    resize: horizontal;
+}
+
+p {
+    margin-left: 2%;
+}
+
+
+/** Stylesheet for the puzzles */
+
+.h5p-parsons {
+    overflow: auto;
+    height: 700px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px #ccc;
+    padding: 10px;
+    background-color: #ccc!important;
+}
+
+.h5p-parsons .h5p-inner {
+    position: absolute;
+    width: 100%;
+    /* background-color: blue; */
+}
+
+.h5p-parsonswidget {
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    /* background-color: #555555; */
+}
+
+
+/*stylesheet for title */
+
+#title {
+    font-size: 45px;
+    font-weight: 500;
+    color: #5885e0;
+    margin: 0 0 24px;
+    text-align: center;
+}
+
+#taskDescription {
+    color: #000;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 26px;
+    line-height: 32px;
+    margin: 0 0 24px;
+    margin-left: 2%;
+}
+
+
+/*stylesheet for the problem*/
+
+.task {
+    margin-left: 2%;
+    font-size: 1.1em;
+    line-height: 1.5em;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.problemTitle {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+p.problemDescription {
+    color: #333333;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5625;
+    margin-bottom: 15px;
+}
+
+p.language {
+    border: 1px solid #777;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-bottom-color: #333;
+    border-bottom-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    /* -moz-box-shadow: inset 0 0.08em 0 rgba(255, 255, 255, 0.4), inset 0 0 0.1em rgba(255, 255, 255, 0.9);
+    -webkit-box-shadow: inset 0 0.08em 0 rgba(255, 255, 255, 0.4), inset 0 0 0.1em rgba(255, 255, 255, 0.9); */
+    box-shadow: inset 0 0.08em 0 rgba(255, 255, 255, 0.4), inset 0 0 0.1em rgba(255, 255, 255, 0.9);
+    /* cursor: pointer; */
+    display: inline-block;
+    font: bold 100%/2.1 "Lucida Grande", Tahoma, sans-serif;
+    padding: 0 .95em 0 0;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    /* -moz-user-select: none;
+    -webkit-user-select: none; */
+    user-select: none;
+    position: relative;
+    /* -moz-border-radius: .3em;
+    -webkit-border-radius: .3em; */
+    border-radius: .3em;
+    background-color: #000;
+}
+
+
+/* p.language:before {
+    content: "Language: ";
+} */
+
+
+/** Stylesheet for the puzzles */
+
+.h5p-parsonswidget #sortableTrash,
+.h5p-parsonswidget #sortable {
+    position: static;
+    padding-left: 0px;
+    margin-left: 2%;
+    float: left;
+}
+
+.h5p-parsonswidget #sortableTrash {
+    width: 38%;
+}
+
+.h5p-parsonswidget #sortable {
+    width: 56%;
+}
+
+
+/* #ul-sortableTrash {
+    border: 4px solid black;
+    border-radius: 10px;
+    height: auto;
+}
+
+#ul-sortable {
+    padding: 2px;
+    border: 1px solid #888
+}
+
+.prettyprint {
+    padding: 2px;
+    border: 1px solid #888
+}
+
+#sortable ul,
+#sortableTrash ul {
+    font-size: 120%;
+    font-family: monospace;
+    list-style: none;
+    background-color: #efefff;
+    padding-bottom: 10px;
+    padding-left: 0;
+    margin-left: 0;
+    border: 1px solid #efefff;
+    ;
+}
+
+#sortable ul:empty,
+#sortableTrash ul:empty {
+    padding-bottom: 30px;
+}
+
+#sortableTrash li,
+#sortableTrash li:before,
+#sortableTrash li:after {
+    box-sizing: content-box;
+}
+
+ul.output {
+    background-color: #FFA;
+}
+
+#sortable li,
+#sortableTrash li {
+    border-radius: 10px;
+    background-color: #EFEFEF;
+    border: 1px solid lightgray;
+    padding: 10px;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: grab;
+}
+
+#sortable li:hover,
+#sortableTrash li:hover {
+    overflow: visible;
+} */
+
+ul.incorrect {
+    border: 1px solid red;
+    background-color: #ffefef;
+}
+
+ul.correct {
+    background-color: #efffef;
+    background-color: #DFF2BF;
+}
+
+li.incorrectIndent {
+    border: 1px solid red;
+    border-left: 10px solid red;
+}
+
+li.correctIndent {
+    border: 1px solid green;
+    border-left: 10px solid green;
+}
+
+li.incorrectPosition,
+.testcase.fail,
+.testcase.error {
+    background-color: #FFBABA;
+    border: 1px solid red;
+}
+
+li.correctPosition,
+.testcase.pass {
+    background-color: #DFF2BF;
+    border: 1px solid green;
+}
+
+.testcase {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.testcase .msg {
+    font-weight: bold;
+}
+
+.testcase .error {
+    color: red;
+}
+
+.testcase .feedback {
+    font-weight: bolder;
+}
+
+.testcase .fail .expected,
+.testcase .fail .actual {
+    color: red;
+    font-weight: bolder;
+}
+
+.testcase .output {
+    display: block;
+    white-space: pre;
+    background-color: #555555;
+    color: white;
+    font-size: 12px;
+    line-height: 15px;
+    margin: 5px;
+    padding: 5px;
+}
+
+
+/** For styling the toggleable elements */
+
+.jsparson-toggle {
+    padding: 0 15px;
+    display: inline-block;
+    border: 1px dashed black;
+    z-index: 500;
+    cursor: pointer;
+    min-width: 10px;
+    min-height: 15px;
+}
+
+.jsparson-toggle:empty {
+    border-color: red;
+}
+
+.jsparson-toggle:empty:before {
+    content: "??";
+    display: block;
+    color: red;
+}
+
+
+/* p#buttons {
+    margin-top: 2%;
+} */
+
+#buttons a {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #ff6600;
+    border: 1px solid lightgray;
+    padding: 10px;
+    margin-top: 5px;
+    text-decoration: none;
+    color: #ffffff;
+    /* margin-top: 5%; */
+    cursor: pointer;
+    margin-left: 2%;
+}
+
+
+/**end old stylesheet **/
+
+
+/** Stylesheet for the puzzles */
+
+.sortable-code {
+    position: static;
+    padding-left: 0px;
+    margin-left: 2%;
+    float: left;
+}
+
+#sortableTrash {
+    width: 38%;
+}
+
+#sortable {
+    width: 56%;
+}
+
+.sortable-code ul {
+    font-size: 120%;
+    font-family: monospace;
+    list-style: none;
+    background-color: #efefff;
+    padding-bottom: 10px;
+    padding-left: 0;
+    margin-left: 0;
+    border: 1px solid #efefff;
+    padding: 0 !important;
+    padding-top: 1em !important;
+    padding-bottom: 1em !important;
+}
+
+.sortable-code ul:empty {
+    padding-bottom: 30px;
+}
+
+.sortable-code li,
+.sortable-code li:before,
+.sortable-code li:after {
+    box-sizing: content-box;
+}
+
+ul.output {
+    background-color: #FFA;
+}
+
+.sortable-code li {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #EFEFEF;
+    border: 1px solid lightgray;
+    padding: 10px;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: move;
+}
+
+.sortable-code li:hover {
+    overflow: visible;
+}
+
+ul.incorrect {
+    border: 1px solid red;
+    background-color: #ffefef;
+}
+
+ul.correct {
+    background-color: #efffef;
+    background-color: #DFF2BF;
+}
+
+li.incorrectIndent {
+    border: 1px solid red;
+    border-left: 10px solid red;
+}
+
+li.correctIndent {
+    border: 1px solid green;
+    border-left: 10px solid green;
+}
+
+li.incorrectPosition,
+.testcase.fail,
+.testcase.error {
+    background-color: #FFBABA;
+    border: 1px solid red;
+}
+
+li.correctPosition,
+.testcase.pass {
+    background-color: #DFF2BF;
+    border: 1px solid green;
+}
+
+.testcase {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.testcase .msg {
+    font-weight: bold;
+}
+
+.testcase .error {
+    color: red;
+}
+
+.testcase .feedback {
+    font-weight: bolder;
+}
+
+.testcase .fail .expected,
+.testcase .fail .actual {
+    color: red;
+    font-weight: bolder;
+}
+
+.testcase .output {
+    display: block;
+    white-space: pre;
+    background-color: #555555;
+    color: white;
+    font-size: 12px;
+    line-height: 15px;
+    margin: 5px;
+    padding: 5px;
+}
+
+
+/** For styling the toggleable elements */
+
+.jsparson-toggle {
+    padding: 0 15px;
+    display: inline-block;
+    border: 1px dashed black;
+    z-index: 500;
+    cursor: pointer;
+    min-width: 10px;
+    min-height: 15px;
+}
+
+.jsparson-toggle:empty {
+    border-color: red;
+}
+
+.jsparson-toggle:empty:before {
+    content: "??";
+    display: block;
+    color: red;
+}
+
+#buttons a {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #ff6600;
+    border: 1px solid lightgray;
+    padding: 10px;
+    margin-top: 5px;
+    text-decoration: none;
+    color: #ffffff;
+}
