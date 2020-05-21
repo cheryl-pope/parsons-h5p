@@ -1316,6 +1316,7 @@ var H5P = H5P || {};
             }
             // if answer is correct, mark it in the UI
             if (fb.success) {
+                alert("you are doing well");
                 this.$parsonswidget.find("#ul-" + this.options.sortableId).addClass("correct");
             }
             // log the feedback and return; based on the type of grader
@@ -1473,4 +1474,4 @@ var H5P = H5P || {};
     // allows _ and $ to be modified with noconflict without changing the globals
     // that parsons uses
 )(H5P.jQuery, _);
-module.exports = { ParsonsWidget }
+// module.exports = { ParsonsWidget }

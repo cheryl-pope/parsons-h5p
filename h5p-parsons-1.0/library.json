@@ -19,7 +19,6 @@
         { "path": "style/parsons.css" },
         { "path": "style/prettify.css" },
         { "path": "style/h5p-jquery-ui.css" }
-
     ],
     "preloadedJs": [{
             "path": "./lib/prettify.js"

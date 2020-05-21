@@ -56,13 +56,13 @@ H5P.Parsons = (function($, _) {
     //         state = STATE_FINISHED;
     //     }
 
-    // if (this.params.behaviour.enableSolutionsButton) {
-    //     if (state === STATE_CHECKING && !allCorrect) {
-    //         this.showButton('show-solution');
-    //     } else {
-    //         this.hideButton('show-solution');
+    //     if (this.params.behaviour.enableSolutionsButton) {
+    //         if (state === STATE_CHECKING && !allCorrect) {
+    //             this.showButton('show-solution');
+    //         } else {
+    //             this.hideButton('show-solution');
+    //         }
     //     }
-    // }
 
     //     if (this.params.behaviour.enableRetry) {
     //         if ((state === STATE_CHECKING && !allCorrect) || state === STATE_SHOWING_SOLUTION) {
@@ -97,10 +97,11 @@ H5P.Parsons = (function($, _) {
         $('<p/>', { html: this.options.assignmentDescription, "id": "taskDescription" }).appendTo(self.$inner);
 
         for (var j = 0; j < this.content.length; j++) {
+            var problem = this.content[j];
             var parson = new H5P.ParsonsWidget({
                 'sortableId': 'sortable',
                 'trashId': 'sortableTrash',
-                'max_wrong_lines': 1,
+                'max_wrong_lines': problem.code.max_wrong_lines,
                 'feedback_cb': displayErrors
             });
             // this.$parsonswidget = parson.$parsonswidget;
@@ -108,14 +109,14 @@ H5P.Parsons = (function($, _) {
 
             $("<div/>", { "class": "task", "id": "task-" + j }).appendTo(self.$inner);
 
-            var problem = this.content[j];
+
             var problem_title = problem.problem_title;
             var problem_description = problem.problem_description;
             var num = j + 1;
             $("<h2/>", { "class": "problemTitle", "text": "Question " + num + ": " + problem_title }).appendTo($("#task-" + j));
             $("<p/>", { "class": "problemDescription", "text": problem_description }).appendTo($("#task-" + j));
-            $("<p/>", { "class": "language", "text": problem.code.code_language }).appendTo($("#task-" + j));
-            $(".language").prepend($($("<i class= 'fas fa-globe-asia'> language:  </i> ")));
+            $("<p/>", { "class": "language", "id": "language-" + j, "text": problem.code.code_language }).appendTo($("#task-" + j));
+            $("#language-" + j).prepend($("<i class= 'fas fa-globe-asia'> language:  </i> "));
             var code_line = problem.code.code_block;
             console.log(code_line);
             parson.init(code_line);
@@ -139,6 +140,17 @@ H5P.Parsons = (function($, _) {
             // console.log(parson.code.code_block);
             parson.$parsonswidget.find("#" + parson.options.sortableId).addClass('sortable-code');
 
+            //add test partern
+            var btn = document.createElement("div");
+
+            btn.innerHTML = "0";
+            btn.id = "btn";
+            parson.$parsonswidget.append(btn);
+
+            btn.onclick = function() {
+                btn.innerHTML++;
+            }
+
         }
 
 
@@ -153,9 +165,12 @@ H5P.Parsons = (function($, _) {
             var currentIndex = currentId.substr(currentId.length - 1);
             console.log("feedback : " + currentIndex + "is ongoing");
             event.preventDefault();
-            self.parsonList[currentIndex].getFeedback();
-            console.log("here is the feedback")
+            var fb = self.parsonList[currentIndex].getFeedback();
+            // console.log("here is the feedback")
+            console.log(fb.feedback.html);
+            if (fb.success) { alert("Good, you solved the assignment!"); }
         });
+
         //this.$inner.append(parson.$parsonswidget);
         //this.$parsonswidget = parson.$parsonswidget;
 
