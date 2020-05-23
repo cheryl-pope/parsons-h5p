@@ -776,28 +776,33 @@ var H5P = H5P || {};
             // toggleable elements are only enabled for unit tests
             if (!widget.options.unittests && !widget.options.vartests) { return; }
             var handlers = $.extend(defaultToggleTypeHandlers, widget.options.toggleTypeHandlers),
-                context = widget.$parsonswidget.find("#" + widget.options.sortableId + ", #" + widget.options.trashId);
+                context = widget.$parsonswidget.find("#" + widget.options.sortableId) + ", #" + widget.options.trashId);
             widget.$parsonswidget.find(".jsparson-toggle", context).each(function(index, item) {
-                var type = $(item).data("type");
+                var type = widget.$parsonswidget.find(item).data("type");
                 if (!type) { return; }
                 var handler = handlers[type],
                     jspOptions;
                 if ($.isFunction(handler)) {
-                    jspOptions = handler($(item));
+                    jspOptions = handler(widget.$parsonswidget.find(item));
                 } else {
                     jspOptions = handler;
                 }
                 if (jspOptions && $.isArray(jspOptions)) {
-                    $(item).attr("data-jsp-options", JSON.stringify(jspOptions));
+                    widget.$parsonswidget.find(item).attr("data-jsp-options", JSON.stringify(jspOptions));
                 }
             });
             // register a click handler for all the toggleable elements (and unregister existing)
+            console.log(context);
             context.off("click", ".jsparson-toggle").on("click", ".jsparson-toggle", function() {
-                var $this = $(this),
+                console.log("comein");
+                var $this = widget.$parsonswidget.find(this),
                     curVal = $this.text(),
                     choices = $this.data("jsp-options"),
                     newVal = choices[(choices.indexOf(curVal) + 1) % choices.length],
                     $parent = $this.parent("li");
+                
+                curVal = "aaaaa";
+                console.log(curVal);
                 // clear existing feedback
                 widget.clearFeedback();
                 // change the shown toggle element
