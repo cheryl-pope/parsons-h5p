@@ -1,16 +1,16 @@
 /**
- * Step By Step Math Content Type
+ * Parsons puzzle Content Type
  */
 
 var H5P = H5P || {};
-var ParsonsWidget = require(ParsonsWidget);
+// var ParsonsWidget = require(ParsonsWidget);
 /**
  *
  * Step By Step Math Exercises module
  * @param  {H5P.jQuery} $ jQuery used by H5P Core
  * @return {function}   StepByStepMath constructor
  */
-H5P.Parsons = (function($, _) {
+H5P.Parsons = (function($, _, EventDispatcher) {
 
     function displayErrors(fb) {
         if (fb.errors.length > 0) {
@@ -26,8 +26,151 @@ H5P.Parsons = (function($, _) {
     function Parsons(options, id, data) {
         // Inheritance
         // Question.call(self, 'parsons');
+        EventDispatcher.call(this);
         this.data = data;
-        this.options = options;
+        var defaults = {
+            endGame: {
+                showResultPage: true,
+                noResultMessage: 'Finished',
+                message: 'Your result:',
+                oldFeedback: {
+                    successGreeting: '',
+                    successComment: '',
+                    failGreeting: '',
+                    failComment: ''
+                },
+                overallFeedback: [],
+                finishButtonText: 'Finish',
+                solutionButtonText: 'Show solution',
+                retryButtonText: 'Retry',
+                showAnimations: false,
+                skipButtonText: 'Skip video',
+                showSolutionButton: true,
+                showRetryButton: true
+            },
+            override: {},
+        };
+
+        this.options = $.extend(true, {}, defaults, options);
+
+        var solutionButtonTemplate = this.options.endGame.showSolutionButton ?
+            '    <button type="button" class="h5p-joubelui-button h5p-button qs-solutionbutton"><%= solutionButtonText %></button>' :
+            '';
+        const retryButtonTemplate = this.options.endGame.showRetryButton ?
+            '    <button type="button" class="h5p-joubelui-button h5p-button qs-retrybutton"><%= retryButtonText %></button>' :
+            '';
+        var resulttemplate =
+            '<div class="questionset-results">' +
+            '  <div class="greeting"><%= message %></div>' +
+            '  <div class="feedback-section">' +
+            '    <div class="feedback-scorebar"></div>' +
+            '    <div class="feedback-text"></div>' +
+            '  </div>' +
+            '  <% if (comment) { %>' +
+            '  <div class="result-header"><%= comment %></div>' +
+            '  <% } %>' +
+            '  <% if (resulttext) { %>' +
+            '  <div class="result-text"><%= resulttext %></div>' +
+            '  <% } %>' +
+            '  <div class="buttons">' +
+            solutionButtonTemplate +
+            retryButtonTemplate +
+            '  </div>' +
+            '</div>';
+        var questionInstances = [];
+        var questionOrder;
+        // Set overrides for questions
+        var override;
+
+        if (options.override.showSolutionButton || options.override.retryButton || options.override.checkButton === false) {
+            override = {};
+            if (options.override.showSolutionButton) {
+                // Force "Show solution" button to be on or off for all interactions
+                override.enableSolutionsButton =
+                    (options.override.showSolutionButton === 'on' ? true : false);
+            }
+
+            if (options.override.retryButton) {
+                // Force "Retry" button to be on or off for all interactions
+                override.enableRetry =
+                    (options.override.retryButton === 'on' ? true : false);
+            }
+
+            if (options.override.checkButton === false) {
+                // Force "Check" button to be on or off for all interactions
+                override.enableCheckButton = options.override.checkButton;
+            }
+        }
+        Data = data || {};
+
+        // Bring question set up to date when resuming
+        if (Data.previousState) {
+            if (Data.previousState.progress) {
+                currentQuestion = Data.previousState.progress;
+            }
+            questionOrder = Data.previousState.order;
+        }
+        /**
+         * Generates question instances from H5P objects
+         *
+         * @param  {object} questions H5P content types to be created as instances
+         * @return {array} Array of questions instances
+         */
+        var createQuestionInstancesFromQuestions = function(questions) {
+            var result = [];
+            // Create question instances from questions
+            // Instantiate question instances
+            for (var i = 0; i < questions.length; i++) {
+
+                var question;
+                // If a previous order exists, use it
+                if (questionOrder !== undefined) {
+                    question = questions[questionOrder[i]];
+                } else {
+                    // Use a generic order when initialzing for the first time
+                    question = questions[i];
+                }
+
+                if (override) {
+                    // Extend subcontent with the overrided settings.
+                    $.extend(question.options.behaviour, override);
+                }
+
+                question.params = question.params || {};
+                var hasAnswers = Data.previousState && Data.previousState.answers;
+                // var questionInstance = H5P.newRunnable(question, id, undefined, undefined, {
+                //     previousState: hasAnswers ? Data.previousState.answers[i] : undefined,
+                //     parent: self
+                // });
+                // questionInstance.on('resize', function() {
+                //     up = true;
+                //     self.trigger('resize');
+                // });
+                // result.push(questionInstance);
+            }
+
+            return result;
+        };
+
+        // Create question instances from questions given by params
+        questionInstances = createQuestionInstancesFromQuestions(options.content);
+        // // Get total score.
+        // var finals = this.getScore();
+        // var totals = self.getMaxScore();
+
+        // var success = ((100 * finals / totals) >= optionss.passPercentage);
+        var success = ((100 * 2 / 10) >= options.passPercentage);
+        this.endTemplate = new EJS({ text: resulttemplate });
+        this.eparams = {
+            message: this.options.endGame.showResultPage ? this.options.endGame.message : this.options.endGame.noResultMessage,
+            comment: this.options.endGame.showResultPage ? (success ? this.options.endGame.oldFeedback.successGreeting : this.options.endGame.oldFeedback.failGreeting) : undefined,
+            resulttext: this.options.endGame.showResultPage ? (success ? this.options.endGame.oldFeedback.successComment : this.options.endGame.oldFeedback.failComment) : undefined,
+            finishButtonText: this.options.endGame.finishButtonText,
+            solutionButtonText: this.options.endGame.solutionButtonText,
+            retryButtonText: this.options.endGame.retryButtonText
+        };
+
+
         this.parsonList = [];
         this.id = id;
         this.content = this.options.content;
@@ -37,7 +180,27 @@ H5P.Parsons = (function($, _) {
 
         this.parsonswidget = H5P.ParsonsWidget;
 
+        // // Get current score for questionset.
+        // this.getScore = function() {
+        //     var score = 0;
+        //     for (var i = questionInstances.length - 1; i >= 0; i--) {
+        //         score += questionInstances[i].getScore();
+        //     }
+        //     return score;
+        // };
+
+        // // Get total score possible for questionset.
+        // this.getMaxScore = function() {
+        //     var score = 0;
+        //     for (var i = questionInstances.length - 1; i >= 0; i--) {
+        //         score += questionInstances[i].getMaxScore();
+        //     }
+        //     return score;
+        // };
+
+
     }
+
 
     // // Inheritance
     // Parsons.prototype = Object.create(Question.prototype);
@@ -102,7 +265,10 @@ H5P.Parsons = (function($, _) {
                 'sortableId': 'sortable',
                 'trashId': 'sortableTrash',
                 'max_wrong_lines': problem.code.max_wrong_lines,
-                'feedback_cb': displayErrors
+                'feedback_cb': displayErrors,
+                'unittests': unittests,
+                'grader': this.parsonswidget._graders.LanguageTranslationGrader,
+                toggleTypeHandlers: { abc: ["a", "b", "c"] }
             });
             // this.$parsonswidget = parson.$parsonswidget;
             self.parsonList.push(parson);
@@ -136,20 +302,24 @@ H5P.Parsons = (function($, _) {
 
             /*debug for added question length******/
             //console.log(self.parsonList.length);
+
             parson.$parsonswidget.find("#" + parson.options.trashId).addClass('sortable-code');
+            // console.log("i find it");
+
             // console.log(parson.code.code_block);
             parson.$parsonswidget.find("#" + parson.options.sortableId).addClass('sortable-code');
 
             //add test partern
-            var btn = document.createElement("div");
+            // var btn = document.createElement("div");
 
-            btn.innerHTML = "0";
-            btn.id = "btn";
-            parson.$parsonswidget.append(btn);
+            // btn.innerHTML = "0";
+            // btn.id = "btn";
+            // parson.$parsonswidget.append(btn);
 
-            btn.onclick = function() {
-                btn.innerHTML++;
-            }
+            // btn.onclick = function() {
+            //     btn.innerHTML++;
+            // }
+            this.endTemplate.render(this.eparams).insertAfter(".h5p-inner");
 
         }
 
@@ -193,4 +363,7 @@ H5P.Parsons = (function($, _) {
     };
     H5P.Parsons = ParsonsWidget;
     return Parsons;
-})(H5P.jQuery, _);
+})(H5P.jQuery, _, H5P.EventDispatcher);
+H5P.Parsons.prototype.constructor = H5P.Parsons;
+H5P.Parsons.prototype = Object.create(H5P.EventDispatcher.prototype);
+67

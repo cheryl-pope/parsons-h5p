@@ -1,0 +1,9 @@
+h5p pack command:
+h5p pack -r h5p-parsons-1.0 H5P.AdvancedText-1.1 jQuery.ui-1.10 FontAwesome-4.5 H5P.JoubelUI-1.3 Tether-1.0 H5P.Question-1.4 H5PEditor.RangeList-1.0 H5PEditor.Wizard-1.2 h5p-editor-vertical-tabs-master parsons_1.0.h5p
+
+
+ some note:
+ https://ejs.co/
+
+ issues:
+ questionInstances

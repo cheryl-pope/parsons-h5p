@@ -3,7 +3,7 @@
     "description": "playing parsons puzzle",
     "majorVersion": 1,
     "minorVersion": 0,
-    "patchVersion": 2,
+    "patchVersion": 3,
     "runnable": 1,
     "author": "Sun",
     "license": "MIT",
@@ -24,13 +24,9 @@
             "path": "./lib/prettify.js"
         },
         {
-            "path": "./lib/h5p-jquery-ui.js"
-        }, {
-            "path": "./lib/require.js"
+            "path": "./lib/jquery.min.js"
         },
         {
-            "path": "./lib/jquery.min.js"
-        }, {
             "path": "./lib/jquery-ui.min.js"
         },
         {
@@ -59,6 +55,10 @@
     ],
 
     "preloadedDependencies": [{
+            "machineName": "EmbeddedJS",
+            "majorVersion": 1,
+            "minorVersion": 0
+        }, {
             "machineName": "H5P.AdvancedText",
             "majorVersion": "1",
             "minorVersion": "1"
@@ -92,6 +92,11 @@
             "machineName": "H5PEditor.RangeList",
             "majorVersion": 1,
             "minorVersion": 0
+        },
+        {
+            "machineName": "H5PEditor.VerticalTabs",
+            "majorVersion": 1,
+            "minorVersion": 3
         },
         {
             "machineName": "H5PEditor.Wizard",

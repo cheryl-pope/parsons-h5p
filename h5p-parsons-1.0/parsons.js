@@ -770,6 +770,7 @@ var H5P = H5P || {};
             }
         };
         var addToggleableElements = function(widget) {
+            console.log("i am in the function");
             for (var i = 0; i < widget.modified_lines.length; i++) {
                 widget.modified_lines[i]._addToggles();
             }
