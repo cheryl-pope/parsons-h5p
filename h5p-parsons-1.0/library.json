@@ -29,8 +29,6 @@
             "path": "./lib/require.js"
         },
         {
-            "path": "./lib/jquery.min.js"
-        }, {
             "path": "./lib/jquery-ui.min.js"
         },
         {

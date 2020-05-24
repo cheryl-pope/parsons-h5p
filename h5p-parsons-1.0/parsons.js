@@ -212,7 +212,7 @@ var H5P = H5P || {};
         VariableCheckGrader.prototype._codelinesAsString = function() {
             var student_code = this.parson.getModifiedCode("#ul-" + this.parson.options.sortableId);
             var executableCode = "";
-            $.each(student_code, function(index, item) {
+            $.each(student_code, function(_index, item) {
                 // split codeblocks on br elements
                 var lines = this.parson.$parsonswidget.find("#" + item.id).html().split(/<br\s*\/?>/);
                 // go through all the lines
@@ -229,7 +229,7 @@ var H5P = H5P || {};
                 feedback = "",
                 log_errors = [],
                 all_passed = true;
-            $.each(parson.options.vartests, function(index, testdata) {
+            $.each(parson.options.vartests, function(_index, testdata) {
                 var student_code = studentcode || that._codelinesAsString();
                 var executableCode = (testdata.initcode || "") + "\n" + student_code + "\n" + (testdata.code || "");
                 var variables, expectedVals;
@@ -593,7 +593,8 @@ var H5P = H5P || {};
             }
             // replace each line with in solution with the corresponding line in executable code
             var toggleRegexp = new RegExp("\\$\\$toggle(" + parson.options.toggleSeparator + ".*?)?\\$\\$", "g");
-            $.each(student_code, function(index, item) {
+            console.log("this is the student code:\n", student_code);
+            $.each(student_code, function(_index, item) {
                 var ind = parseInt(item.id.replace(parson.id_prefix, ''), 10);
 
                 // Handle toggle elements. Expects the toggle areas in executable code to be marked
@@ -613,6 +614,8 @@ var H5P = H5P || {};
                     }
                 }
                 var execlines = execline.split(/<br\s*\/?>/);
+                console.log("this is the execlines:");
+                console.log("--->", execlines);
                 for (i = 0; i < execlines.length; i++) {
                     // add the modified codeline to the executable code
                     executableCodeString += python_indents[item.indent] + execlines[i] + "\n";
@@ -651,7 +654,7 @@ var H5P = H5P || {};
             // codeline in the student's code for the LIS computation and, for example,
             // assigns appropriate indices for duplicate lines.
             var lastFoundCodeIndex = {};
-            $.each(studentCodeLineObjects, function(index, lineObject) {
+            $.each(studentCodeLineObjects, function(_index, lineObject) {
                 // find the first matching line in the model solution
                 // starting from where we have searched previously
                 for (var i = (typeof(lastFoundCodeIndex[lineObject.code]) !== 'undefined') ? lastFoundCodeIndex[lineObject.code] + 1 : 0; i < parson.model_solution.length; i++) {
@@ -765,6 +768,7 @@ var H5P = H5P || {};
                     opts = [],
                     curr = min;
                 while (curr <= max) {
+                    console.log("curr is smaller than max");
                     opts.push("" + curr);
                     curr += step;
                 }
@@ -779,11 +783,12 @@ var H5P = H5P || {};
             if (!widget.options.unittests && !widget.options.vartests) { return; }
             var handlers = $.extend(defaultToggleTypeHandlers, widget.options.toggleTypeHandlers),
                 context = widget.$parsonswidget.find("#" + widget.options.sortableId + ", #" + widget.options.trashId);
-            widget.$parsonswidget.find(".jsparson-toggle", context).each(function(index, item) {
+            widget.$parsonswidget.find(".jsparson-toggle", context).each(function(_index, item) {
                 console.log("-------------------------");
                 console.log(item);
                 console.log("--------end listing-----");
                 var type = $(item).data("type");
+                console.log(type);
                 if (!type) { return; }
                 var handler = handlers[type],
                     jspOptions;
@@ -792,6 +797,7 @@ var H5P = H5P || {};
                 } else {
                     jspOptions = handler;
                 }
+                console.log("this is the jsOption variable :--->", jspOptions);
                 if (jspOptions && $.isArray(jspOptions)) {
                     $(item).attr("data-jsp-options", JSON.stringify(jspOptions));
                 }
@@ -862,9 +868,12 @@ var H5P = H5P || {};
                         JSON.stringify(opts).replace("<", "&lt;") + "'></span>");
 
                 }
+                console.log("i am in the _addToggle function: ");
+                console.log(html);
                 this.elem().html(html);
-                this.elem().find(".jsparson-toggle").each(function(index, item) {
+                this.elem().find(".jsparson-toggle").each(function(_index, item) {
                     that._toggles.push(item);
+                    console.log(item);
                 });
             }
         };
@@ -1008,7 +1017,7 @@ var H5P = H5P || {};
 
             var normalized = this.normalizeIndents(indented);
 
-            $.each(normalized, function(index, item) {
+            $.each(normalized, function(_index, item) {
                 if (item.indent < 0) {
                     // Indentation error
                     errors.push(this.translations.no_matching(normalized.orig));
@@ -1345,7 +1354,7 @@ var H5P = H5P || {};
             if (this.feedback_exists) {
                 this.$parsonswidget.find("#ul-" + this.options.sortableId).removeClass("incorrect correct");
                 var li_elements = this.$parsonswidget.find("#ul-" + this.options.sortableId + " li");
-                $.each(this.FEEDBACK_STYLES, function(index, value) {
+                $.each(this.FEEDBACK_STYLES, function(_index, value) {
                     li_elements.removeClass(value);
                 });
             }
@@ -1442,7 +1451,7 @@ var H5P = H5P || {};
                     that.updateHTMLIndent(ui.item[0].id);
                     that.addLogEntry({ type: "moveOutput", target: ui.item[0].id }, true);
                 },
-                receive: function(event, ui) {
+                receive: function(_event, ui) {
                     var ind = that.updateIndent(ui.position.left - ui.item.parent().position().left,
                         ui.item[0].id);
                     that.updateHTMLIndent(ui.item[0].id);
@@ -1455,7 +1464,7 @@ var H5P = H5P || {};
                 var trash = this.$parsonswidget.find("#ul-" + this.options.trashId).sortable({
                     connectWith: sortable,
                     start: function() { that.clearFeedback(); },
-                    receive: function(event, ui) {
+                    receive: function(_event, ui) {
                         that.getLineById(ui.item[0].id).indent = 0;
                         that.updateHTMLIndent(ui.item[0].id);
                         that.addLogEntry({ type: "removeOutput", target: ui.item[0].id }, true);
