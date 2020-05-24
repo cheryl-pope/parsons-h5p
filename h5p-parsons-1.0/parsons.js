@@ -582,6 +582,7 @@ var H5P = H5P || {};
         // For each line in the model solution, there should be a matching line
         // in the executable_code.
         LanguageTranslationGrader.prototype._replaceCodelines = function() {
+            console.log("this parson is now in the _replaceCodelines function");
             var student_code = this.parson.normalizeIndents(this.parson.getModifiedCode("#ul-" +
                     this.parson.options.sortableId)),
                 executableCodeString = "",
@@ -617,6 +618,7 @@ var H5P = H5P || {};
                     executableCodeString += python_indents[item.indent] + execlines[i] + "\n";
                 }
             });
+            console.log("this is the final string :", executableCodeString);
             return executableCodeString;
         };
 
@@ -778,6 +780,9 @@ var H5P = H5P || {};
             var handlers = $.extend(defaultToggleTypeHandlers, widget.options.toggleTypeHandlers),
                 context = widget.$parsonswidget.find("#" + widget.options.sortableId + ", #" + widget.options.trashId);
             widget.$parsonswidget.find(".jsparson-toggle", context).each(function(index, item) {
+                console.log("-------------------------");
+                console.log(item);
+                console.log("--------end listing-----");
                 var type = $(item).data("type");
                 if (!type) { return; }
                 var handler = handlers[type],
@@ -802,6 +807,9 @@ var H5P = H5P || {};
                 widget.clearFeedback();
                 // change the shown toggle element
                 $this.text(newVal);
+                //print out the parent
+                console.log("this is the parent: ");
+                console.log($parent);
                 // log the event
                 widget.addLogEntry({
                     type: "toggle",
@@ -1045,6 +1053,7 @@ var H5P = H5P || {};
             });
             $('<div/>', { "id": this.options.trashId }).appendTo(this.$parsonswidget);
             $('<div/>', { "id": this.options.sortableId }).appendTo(this.$parsonswidget);
+            $('<div/>', { "id": "unittest" }).appendTo(this.$parsonswidget);
 
         };
 
@@ -1099,7 +1108,7 @@ var H5P = H5P || {};
             var context = this.$parsonswidget.find("#" + this.options.sortableId + ", #" + this.options.trashId),
                 toggles = this.$parsonswidget.find(".jsparson-toggle", context),
                 toggleStates = {};
-            this.$parsonswidget.find("#" + this.options.sortableId + " .jsparson-toggle").each(function() {
+            this.$parsonswidget.find("#" + this.options.sortableId).find(" .jsparson-toggle").each(function() {
                 if (!toggleStates.output) {
                     toggleStates.output = [];
                 }
@@ -1107,9 +1116,11 @@ var H5P = H5P || {};
             });
             if (this.options.trashId) {
                 toggleStates.input = [];
-                $("#" + this.options.trashId + " .jsparson-toggle").each(function() {
+                this.$parsonswidget.find("#" + this.options.trashId).find(" .jsparson-toggle").each(function() {
                     toggleStates.input.push($(this).text());
                 });
+                console.log("after push toggles into list: ");
+                console.log(toggleStates.input);
             }
             if ((toggleStates.output && toggleStates.output.length > 0) ||
                 (toggleStates.input && toggleStates.input.length > 0)) {
@@ -1143,7 +1154,7 @@ var H5P = H5P || {};
 
             state = logData.output;
 
-            jQuery.extend(logData, entry);
+            H5P.jQuery.extend(logData, entry);
             this.user_actions.push(logData);
 
             //Updating the state history
@@ -1322,6 +1333,7 @@ var H5P = H5P || {};
             // log the feedback and return; based on the type of grader
             if ('html' in fb) { // unittest/vartests type feedback
                 this.addLogEntry({ type: "feedback", tests: fb.tests, success: fb.success });
+
                 return { feedback: fb.html, success: fb.success };
             } else {
                 this.addLogEntry({ type: "feedback", errors: fb.log_errors, success: fb.success });

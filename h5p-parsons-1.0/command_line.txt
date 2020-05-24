@@ -1,0 +1,15 @@
+h5p pack command:
+h5p pack -r h5p-parsons-1.0 H5P.AdvancedText-1.1 jQuery.ui-1.10 FontAwesome-4.5 H5P.JoubelUI-1.3 Tether-1.0 H5P.Question-1.4 H5PEditor.RangeList-1.0 H5PEditor.Wizard-1.2 h5p-editor-vertical-tabs-master parsons_1.0.h5p
+
+
+ some note:
+ https://ejs.co/
+
+ issues:
+ questionInstances
+
+ h5p-parsons-1.0,H5P.AdvancedText-1.1,jQuery.ui-1.10,FontAwesome-4.5,H5P.JoubelUI-1.3,Tether-1.0,H5P.Question-1.4,H5PEditor.RangeList-1.0,H5PEditor.Wizard-1.2,h5p-editor-vertical-tabs-master,embeddedjs-master
+embeddedjs-master SKIPPED Error: ENOENT: no such file or directory, open 'C:\Users\sunpe\OneDrive\桌面\project\Team27\embeddedjs-master\library.json'
+(node:7164) UnhandledPromiseRejectionWarning: #<Object>
+(node:7164) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1)
+(node:7164) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.

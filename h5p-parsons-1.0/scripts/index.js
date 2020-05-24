@@ -35,7 +35,7 @@ H5P.Parsons = (function($, _) {
             class: "h5p-inner"
         });
 
-        this.parsonswidget = H5P.ParsonsWidget;
+        // this.parsonswidget = H5P.ParsonsWidget;
 
     }
 
@@ -87,7 +87,7 @@ H5P.Parsons = (function($, _) {
      */
     Parsons.prototype.attach = function($container) {
         var self = this;
-
+        ParsonsWidget = H5P.ParsonsWidget;
 
         self.$container = $container;
         $container.addClass('h5p-parsons');
@@ -98,12 +98,27 @@ H5P.Parsons = (function($, _) {
 
         for (var j = 0; j < this.content.length; j++) {
             var problem = this.content[j];
-            var parson = new H5P.ParsonsWidget({
+            var parson = new ParsonsWidget({
                 'sortableId': 'sortable',
                 'trashId': 'sortableTrash',
                 'max_wrong_lines': problem.code.max_wrong_lines,
-                'feedback_cb': displayErrors
+                // 'feedback_cb': displayErrors,
+                'vartests': [{ initcode: "min = None\na = 0\nb = 2", code: "", message: "Testing with a = 0 ja b = 2", variables: { min: 0 } },
+                    {
+                        initcode: "min = None\na = 7\nb = 4\n",
+                        code: "",
+                        message: "Testing with a = 7 ja b = 4",
+                        variables: { min: 4 }
+                    }
+                ],
+                'grader': ParsonsWidget._graders.LanguageTranslationGrader,
+                'executable_code': "if $$toggle$$ $$toggle::<::>::!=$$ b:\n" +
+                    "min = a\n" +
+                    "else:\n" +
+                    "min = b\n  pass",
+                'programmingLang': "pseudo"
             });
+
             // this.$parsonswidget = parson.$parsonswidget;
             self.parsonList.push(parson);
 
@@ -132,7 +147,7 @@ H5P.Parsons = (function($, _) {
             $('<p/>', { 'id': "buttons" }).appendTo($("#task-" + j));
             $('<a/>', { "class": "instance", 'id': "newInstanceLink-" + j, 'text': "New instance" }).appendTo($("#task-" + j).find("#buttons"))
             $('<a/>', { "class": "feedback", 'id': "feedbackLink-" + j, 'text': "Get Feedback" }).appendTo($("#task-" + j).find("#buttons"));
-
+            // $('<div/>', { "class": "unittest", 'id': "unittest" }).insertAfter($("#task-" + j).find("#buttons"));
 
             /*debug for added question length******/
             //console.log(self.parsonList.length);
@@ -141,15 +156,15 @@ H5P.Parsons = (function($, _) {
             parson.$parsonswidget.find("#" + parson.options.sortableId).addClass('sortable-code');
 
             //add test partern
-            var btn = document.createElement("div");
+            // var btn = document.createElement("div");
 
-            btn.innerHTML = "0";
-            btn.id = "btn";
-            parson.$parsonswidget.append(btn);
+            // btn.innerHTML = "0";
+            // btn.id = "btn";
+            // parson.$parsonswidget.append(btn);
 
-            btn.onclick = function() {
-                btn.innerHTML++;
-            }
+            // btn.onclick = function() {
+            //     btn.innerHTML++;
+            // }
 
         }
 
@@ -167,8 +182,9 @@ H5P.Parsons = (function($, _) {
             event.preventDefault();
             var fb = self.parsonList[currentIndex].getFeedback();
             // console.log("here is the feedback")
-            console.log(fb.feedback.html);
-            if (fb.success) { alert("Good, you solved the assignment!"); }
+            console.log(fb.feedback);
+            // if (fb.success) { alert("Good, you solved the assignment!"); }
+            self.parsonList[currentIndex].$parsonswidget.find("#unittest").html("<h2>Feedback from testing your program:</h2>" + fb.feedback);
         });
 
         //this.$inner.append(parson.$parsonswidget);

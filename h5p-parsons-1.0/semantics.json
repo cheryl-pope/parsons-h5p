@@ -12,6 +12,10 @@
         "label": "List of puzzle puzzle problems",
         "importance": "high",
         "type": "list",
+        "widgets": [{
+            "name": "VerticalTabs",
+            "label": "Default"
+        }],
         "min": 1,
         "entity": "problem",
         "field": {
