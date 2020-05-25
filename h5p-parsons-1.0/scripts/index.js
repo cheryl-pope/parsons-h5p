@@ -13,7 +13,7 @@ var ParsonsWidget = require(ParsonsWidget);
 H5P.Parsons = (function($, _) {
 
     function displayErrors(fb) {
-        if (fb.errors.length > 0) {
+        if (undefined != fb.errors && fb.errors.length > 0) {
             alert(fb.errors[0]);
         }
     }
@@ -27,17 +27,105 @@ H5P.Parsons = (function($, _) {
         // Inheritance
         // Question.call(self, 'parsons');
         this.data = data;
-        this.options = options;
+
+
+        var defaults = {
+            texts: {
+                prevButton: 'Previous question',
+                nextButton: 'Next question',
+                finishButton: 'Finish',
+                textualProgress: 'Question: @current of @total questions',
+                jumpToQuestion: 'Question %d of %total',
+                questionLabel: 'Question',
+                readSpeakerProgress: 'Question @current of @total',
+                unansweredText: 'Unanswered',
+                answeredText: 'Answered',
+                currentQuestionText: 'Current question'
+            },
+            endGame: {
+                showResultPage: true,
+                noResultMessage: 'Finished',
+                message: 'Your result:',
+                oldFeedback: {
+                    successGreeting: '',
+                    successComment: '',
+                    failGreeting: '',
+                    failComment: ''
+                },
+                overallFeedback: [],
+                finishButtonText: 'Finish',
+                solutionButtonText: 'Show solution',
+                retryButtonText: 'Retry',
+                showAnimations: false,
+                skipButtonText: 'Skip video',
+                showSolutionButton: true,
+                showRetryButton: true
+            },
+            override: {},
+            disableBackwardsNavigation: false
+        };
+        this.options = $.extend(true, {}, defaults, options);
         this.parsonList = [];
+        this.timestamp = [];
         this.id = id;
         this.content = this.options.content;
+        this.$startQ = $('<button/>', { 'class': "startQuiz", 'text': "start Quiz ?" });
         this.$inner = $('<div/>', {
             class: "h5p-inner"
         });
+        this.$endQ = $('<button/>', { 'class': "endQuiz", 'text': "submit Quiz " });
+
+
+        /* this is the part for get random question to the student */
+        this.questionInstances = [];
+        this.questionOrder; //Stores order of questions to allow resuming of question set
+        /**
+         * Randomizes questions in an array and updates an array containing their order
+         * @param  {array} problems
+         * @return {Object.<array, array>} questionOrdering
+         */
+        this.randomizeQuestionOrdering = function(questions) {
+
+            // Save the original order of the questions in a multidimensional array [[question0,0],[question1,1]...
+            var questionOrdering = questions.map(function(questionInstance, index) {
+                return [questionInstance, index];
+            });
+
+            // Shuffle the multidimensional array
+            questionOrdering = H5P.shuffleArray(questionOrdering);
+
+            // Retrieve question objects from the first index
+            questions = [];
+            for (var i = 0; i < questionOrdering.length; i++) {
+                questions[i] = questionOrdering[i][0];
+            }
+
+            // Retrieve the new shuffled order from the second index
+            var newOrder = [];
+            for (var j = 0; j < questionOrdering.length; j++) {
+
+                // Use a previous order if it exists
+                if (data.previousState && data.previousState.questionOrder) {
+                    newOrder[j] = questionOrder[questionOrdering[j][1]];
+                } else {
+                    newOrder[j] = questionOrdering[j][1];
+                }
+            }
+
+            // Return the questions in their new order *with* their new indexes
+            return {
+                questions: questions,
+                questionOrder: newOrder
+            };
+        };
+
+
 
         // this.parsonswidget = H5P.ParsonsWidget;
 
     }
+
+
 
     // // Inheritance
     // Parsons.prototype = Object.create(Question.prototype);
@@ -92,35 +180,92 @@ H5P.Parsons = (function($, _) {
         self.$container = $container;
         $container.addClass('h5p-parsons');
         self.$inner.appendTo($container);
+        self.$startQ.appendTo($container);
+        /** add start timmer */
+        self.$inner.hide();
+        var startTotal;
+        var finishTotal;
+        $(".startQuiz").click(function() {
+            self.$startQ.hide();
+            self.$inner.show();
+            startTotal = new Date();
+            console.log(startTotal);
+        });
+        /**end timer */
+
+
+        /** start shuffle question order */
+        // Bring question set up to date when resuming
+        if (this.data.previousState) {
+            if (this.data.previousState.progress) {
+                currentQuestion = this.data.previousState.progress;
+            }
+            questionOrder = this.data.previousState.order;
+        }
+
+        // Create a pool (a subset) of questions if necessary
+        if (this.options.poolSize > 0) {
+
+            // If a previous pool exists, recreate it
+            if (this.data.previousState && this.data.previousState.poolOrder) {
+                poolOrder = this.data.previousState.poolOrder;
+
+                // Recreate the pool from the saved data
+                var pool = [];
+                for (var i = 0; i < poolOrder.length; i++) {
+                    pool[i] = this.options.content[poolOrder[i]];
+                }
+
+                // Replace original questions with just the ones in the pool
+                this.options.content = pool;
+            } else { // Otherwise create a new pool
+                // Randomize and get the results
+                var poolResult = this.randomizeQuestionOrdering(this.options.content);
+                var poolQuestions = poolResult.questions;
+                poolOrder = poolResult.questionOrder;
+
+                // Discard extra questions
+
+                poolQuestions = poolQuestions.slice(0, this.options.poolSize);
+                poolOrder = poolOrder.slice(0, this.options.poolSize);
+
+                // Replace original questions with just the ones in the pool
+                this.options.content = poolQuestions;
+            }
+        }
+
+        /* end of the part of the randomizarion of question set */
+        /**end shuffle order */
         //add title assignment
         $('<div/>', { "text": this.data.metadata.title, "id": "title" }).appendTo(self.$inner);
         $('<p/>', { html: this.options.assignmentDescription, "id": "taskDescription" }).appendTo(self.$inner);
-
-        for (var j = 0; j < this.content.length; j++) {
-            var problem = this.content[j];
+        $('<p/>', { 'class': "timer" }).appendTo(self.$inner);
+        for (var j = 0; j < this.options.content.length; j++) {
+            var problem = this.options.content[j];
             var parson = new ParsonsWidget({
                 'sortableId': 'sortable',
                 'trashId': 'sortableTrash',
                 'max_wrong_lines': problem.code.max_wrong_lines,
-                // 'feedback_cb': displayErrors,
-                'vartests': [{ initcode: "min = None\na = 0\nb = 2", code: "", message: "Testing with a = 0 ja b = 2", variables: { min: 0 } },
-                    {
-                        initcode: "min = None\na = 7\nb = 4\n",
-                        code: "",
-                        message: "Testing with a = 7 ja b = 4",
-                        variables: { min: 4 }
-                    }
-                ],
-                'grader': ParsonsWidget._graders.LanguageTranslationGrader,
-                'executable_code': "if $$toggle$$ $$toggle::<::>::!=$$ b:\n" +
-                    "min = a\n" +
-                    "else:\n" +
-                    "min = b\n  pass",
-                'programmingLang': "pseudo"
+                'feedback_cb': displayErrors,
+                // 'vartests': [{ initcode: "min = None\na = 0\nb = 2", code: "", message: "Testing with a = 0 ja b = 2", variables: { min: 0 } },
+                //     {
+                //         initcode: "min = None\na = 7\nb = 4\n",
+                //         code: "",
+                //         message: "Testing with a = 7 ja b = 4",
+                //         variables: { min: 4 }
+                //     }
+                // ],
+                // 'grader': ParsonsWidget._graders.LanguageTranslationGrader,
+                // 'executable_code': "if $$toggle$$ $$toggle::<::>::!=$$ b:\n" +
+                //     "min = a\n" +
+                //     "else:\n" +
+                //     "min = b\n  pass",
+                // 'programmingLang': "pseudo"
             });
 
             // this.$parsonswidget = parson.$parsonswidget;
             self.parsonList.push(parson);
+
 
             $("<div/>", { "class": "task", "id": "task-" + j }).appendTo(self.$inner);
 
@@ -155,6 +300,16 @@ H5P.Parsons = (function($, _) {
             // console.log(parson.code.code_block);
             parson.$parsonswidget.find("#" + parson.options.sortableId).addClass('sortable-code');
 
+
+
+            //submit button to submit the quiz form
+            self.$endQ.appendTo(self.$inner);
+            $(".endQuiz").click(function() {
+                finishTotal = new Date() - startTotal;
+                console.log(finishTotal);
+            });
+            console.log("this is the questionInstances");
+            console.log(this.questionInstances);
             //add test partern
             // var btn = document.createElement("div");
 
@@ -184,7 +339,7 @@ H5P.Parsons = (function($, _) {
             // console.log("here is the feedback")
             console.log(fb.feedback);
             // if (fb.success) { alert("Good, you solved the assignment!"); }
-            self.parsonList[currentIndex].$parsonswidget.find("#unittest").html("<h2>Feedback from testing your program:</h2>" + fb.feedback);
+            // self.parsonList[currentIndex].$parsonswidget.find("#unittest").html("<h2>Feedback from testing your program:</h2>" + fb.feedback);
         });
 
         //this.$inner.append(parson.$parsonswidget);
