@@ -8,7 +8,7 @@ var ParsonsWidget = require(ParsonsWidget);
  *
  * Step By Step Math Exercises module
  * @param  {H5P.jQuery} $ jQuery used by H5P Core
- * @return {function}   StepByStepMath constructor
+ * @return {function}   parsons puzzle constructor
  */
 H5P.Parsons = (function($, _) {
 
@@ -30,6 +30,7 @@ H5P.Parsons = (function($, _) {
 
 
         var defaults = {
+            passPercentage: 50,
             texts: {
                 prevButton: 'Previous question',
                 nextButton: 'Next question',
@@ -74,7 +75,9 @@ H5P.Parsons = (function($, _) {
             class: "h5p-inner"
         });
         this.$endQ = $('<button/>', { 'class': "endQuiz", 'text': "submit Quiz " });
-
+        //score create
+        this.score = 0;
+        this.Maxscore = 0;
 
         /* this is the part for get random question to the student */
         this.questionInstances = [];
@@ -119,11 +122,65 @@ H5P.Parsons = (function($, _) {
             };
         };
 
+        this.endTemplate;
+
+        /**add templates  */
+        this.addTemplate = function() {
+            // var solutionButtonTemplate = this.options.endGame.showSolutionButton ?
+            //     '    <button type="button" class="h5p-joubelui-button h5p-button qs-solutionbutton"><%= solutionButtonText %></button>' :
+            //     '';
+
+            // const retryButtonTemplate = this.options.endGame.showRetryButton ?
+            //     '    <button type="button" class="h5p-joubelui-button h5p-button qs-retrybutton"><%= retryButtonText %></button>' :
+            //     '';
+            var resulttemplate =
+                '<div class="questionset-results">' +
+                '  <div class="greeting"><%= message %></div>' +
+                '  <div class="feedback-section">' +
+                '    <div class="feedback-scorebar"></div>' +
+                '    <div class="feedback-text"></div>' +
+                '  </div>' +
+                '  <% if (comment) { %>' +
+                '  <div class="result-header"><%= comment %></div>' +
+                '  <% } %>' +
+                '  <% if (resulttext) { %>' +
+                '  <div class="result-text"><%= resulttext %></div>' +
+                '  <% } %>' +
+                // '  <div class="buttons">' +
+                // solutionButtonTemplate +
+                // retryButtonTemplate +
+                // '  </div>' +
+                '</div>';
+            this.endTemplate = new EJS({ text: resulttemplate });
+        }
+
+        // // Get current score for questionset.
+        // this.getScore = function() {
+        //     return this.score;
+        // };
+
+        // // Get total score possible for questionset.
+        // this.getMaxScore = function() {
+        //     return this.Maxscore;
+        // };
+        // Get total score.
+        // var finals = this.getScore();
+        // var totals = this.getMaxScore();
+        this.finals;
+        this.totals;
+        this.scoreString = "";
+        // this.scoreString = H5P.Question.determineOverallFeedback(params.endGame.overallFeedback, finals / totals).replace('@score', finals).replace('@total', totals);
+        this.success;
+        this.scoreBar;
+        this.addTemplate();
+
+
 
 
         // this.parsonswidget = H5P.ParsonsWidget;
 
     }
+
 
 
 
@@ -214,10 +271,11 @@ H5P.Parsons = (function($, _) {
                 var pool = [];
                 for (var i = 0; i < poolOrder.length; i++) {
                     pool[i] = this.options.content[poolOrder[i]];
+                    this.questionInstances.push(pool[i]);
                 }
-
                 // Replace original questions with just the ones in the pool
                 this.options.content = pool;
+
             } else { // Otherwise create a new pool
                 // Randomize and get the results
                 var poolResult = this.randomizeQuestionOrdering(this.options.content);
@@ -228,10 +286,11 @@ H5P.Parsons = (function($, _) {
 
                 poolQuestions = poolQuestions.slice(0, this.options.poolSize);
                 poolOrder = poolOrder.slice(0, this.options.poolSize);
-
                 // Replace original questions with just the ones in the pool
                 this.options.content = poolQuestions;
+
             }
+
         }
 
         /* end of the part of the randomizarion of question set */
@@ -242,7 +301,7 @@ H5P.Parsons = (function($, _) {
         $('<p/>', { 'class': "timer" }).appendTo(self.$inner);
         for (var j = 0; j < this.options.content.length; j++) {
             var problem = this.options.content[j];
-            var parson = new ParsonsWidget({
+            var parson = new H5P.ParsonsWidget({
                 'sortableId': 'sortable',
                 'trashId': 'sortableTrash',
                 'max_wrong_lines': problem.code.max_wrong_lines,
@@ -278,6 +337,7 @@ H5P.Parsons = (function($, _) {
             $("<p/>", { "class": "language", "id": "language-" + j, "text": problem.code.code_language }).appendTo($("#task-" + j));
             $("#language-" + j).prepend($("<i class= 'fas fa-globe-asia'> language:  </i> "));
             var code_line = problem.code.code_block;
+            this.Maxscore += 1;
             console.log(code_line);
             parson.init(code_line);
             parson.shuffleLines();
@@ -302,14 +362,9 @@ H5P.Parsons = (function($, _) {
 
 
 
-            //submit button to submit the quiz form
-            self.$endQ.appendTo(self.$inner);
-            $(".endQuiz").click(function() {
-                finishTotal = new Date() - startTotal;
-                console.log(finishTotal);
-            });
-            console.log("this is the questionInstances");
-            console.log(this.questionInstances);
+
+            // console.log("this is the questionInstances");
+            // console.log(this.questionInstances);
             //add test partern
             // var btn = document.createElement("div");
 
@@ -336,11 +391,114 @@ H5P.Parsons = (function($, _) {
             console.log("feedback : " + currentIndex + "is ongoing");
             event.preventDefault();
             var fb = self.parsonList[currentIndex].getFeedback();
+            if (self.parsonList[currentIndex].correct == true) {
+                self.score += 1;
+                // console.log(self.score);
+
+            }
+
             // console.log("here is the feedback")
             console.log(fb.feedback);
             // if (fb.success) { alert("Good, you solved the assignment!"); }
             // self.parsonList[currentIndex].$parsonswidget.find("#unittest").html("<h2>Feedback from testing your program:</h2>" + fb.feedback);
         });
+
+        //submit button to submit the quiz form
+        self.$endQ.appendTo(self.$inner);
+        $(".endQuiz").click(function() {
+            finishTotal = new Date() - startTotal;
+            console.log(finishTotal);
+            /**attach result page */
+            // Trigger finished event.
+            self.finals = self.score;
+            self.totals = self.Maxscore;
+            // console.log(self.finals);
+            // console.log(self.totals);
+            self.success = ((100 * self.finals / self.totals) >= self.options.passPercentage);
+
+            console.log(self.success);
+            self.scoreString = H5P.Question.determineOverallFeedback(self.options.endGame.overallFeedback, self.finals / self.totals);
+
+            self.displayResults();
+            self.trigger('resize');
+            /**end attach result page */
+        });
+        /**start display result setting */
+        self.displayResults = function() {
+            // console.log(this.finals);
+            // console.log(self.totals);
+            this.triggerXAPICompleted(this.finals, this.totals, this.success);
+
+            var eparams = {
+                message: this.options.endGame.showResultPage ? this.options.endGame.message : this.options.endGame.noResultMessage,
+                comment: this.options.endGame.showResultPage ? (this.success ? this.options.endGame.oldFeedback.successGreeting : this.options.endGame.oldFeedback.failGreeting) : undefined,
+                resulttext: this.options.endGame.showResultPage ? (this.success ? this.options.endGame.oldFeedback.successComment : this.options.endGame.oldFeedback.failComment) : undefined,
+                finishButtonText: this.options.endGame.finishButtonText,
+                // solutionButtonText: this.options.endGame.solutionButtonText,
+                // retryButtonText: this.options.endGame.retryButtonText
+            };
+
+            // Show result page.
+            this.$container.children().hide();
+            this.$container.append(this.endTemplate.render(eparams));
+
+            if (this.options.endGame.showResultPage) {
+                // hookUpButton('.qs-solutionbutton', function() {
+                //     showSolutions();
+                //     this.$container.children().hide().filter('.questionset').show();
+                //     _showQuestion(this.options.initialQuestion);
+                // });
+                // hookUpButton('.qs-retrybutton', function() {
+                //     resetTask();
+                //     this.$container.children().hide();
+
+                //     var $intro = $('.intro-page', this.$container);
+                //     if ($intro.length) {
+                //         // Show intro
+                //         $('.intro-page', this.$container).show();
+                //         $('.qs-startbutton', this.$container).focus();
+                //     } else {
+                //         // Show first question
+                //         $('.questionset', this.$container).show();
+                //         _showQuestion(this.options.initialQuestion);
+                //     }
+                // });
+                scoreBar = this.scoreBar;
+                if (scoreBar === undefined) {
+                    scoreBar = H5P.JoubelUI.createScoreBar(this.totals);
+                }
+                scoreBar.appendTo($('.feedback-scorebar', this.$container));
+                $('.feedback-text', this.$container).html(this.scoreString);
+
+                // Announce that the question set is complete
+                setTimeout(function() {
+                    console.log(self.totals);
+                    console.log(self.finals);
+                    $('.qs-progress-announcer', this.$container)
+                        .html(eparams.message + '.' +
+                            this.scoreString + '.' +
+                            eparams.comment + '.' +
+                            eparams.resulttext)
+                        .show().focus();
+                    scoreBar.setMaxScore(self.totals);
+                    scoreBar.setScore(self.finals);
+                }, 0);
+            } else {
+                console.log(self.totals);
+                console.log(self.finals);
+                // Remove buttons and feedback section
+                $('.qs-solutionbutton, .qs-retrybutton, .feedback-section', this.$container).remove();
+            }
+
+            this.trigger('resize');
+        };
+        /**end display result setting */
+
+
+
+
+
+
 
         //this.$inner.append(parson.$parsonswidget);
         //this.$parsonswidget = parson.$parsonswidget;

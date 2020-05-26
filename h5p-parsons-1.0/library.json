@@ -57,6 +57,10 @@
     ],
 
     "preloadedDependencies": [{
+            "machineName": "EmbeddedJS",
+            "majorVersion": 1,
+            "minorVersion": 0
+        }, {
             "machineName": "H5P.AdvancedText",
             "majorVersion": "1",
             "minorVersion": "1"

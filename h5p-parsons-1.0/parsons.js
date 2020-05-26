@@ -915,6 +915,8 @@ var H5P = H5P || {};
             //State history for feedback purposes
             this.state_path = [];
             this.states = {};
+            //scwore counter
+            this.correct = false;
             //container
             this.$parsonswidget = $('<div/>', { class: "h5p-parsonswidget" });
             var defaults = {
@@ -964,6 +966,7 @@ var H5P = H5P || {};
                     this.grader = new LineBasedGrader(this);
                 }
             }
+
         };
         ParsonsWidget._graders = graders;
 
@@ -1337,6 +1340,7 @@ var H5P = H5P || {};
             // if answer is correct, mark it in the UI
             if (fb.success) {
                 alert("you are doing well");
+                this.correct = true;
                 this.$parsonswidget.find("#ul-" + this.options.sortableId).addClass("correct");
             }
             // log the feedback and return; based on the type of grader
@@ -1489,6 +1493,12 @@ var H5P = H5P || {};
             }
             this.addLogEntry({ type: 'init', time: new Date(), bindings: bindings });
         };
+        //count score 
+        ParsonsWidget.prototype.getMaxScore = function() {
+            console.log("this is the widget's max_score record");
+            return this.score;
+        };
+
         // window['ParsonsWidget'] = ParsonsWidget;
         H5P.ParsonsWidget = ParsonsWidget;
     }
