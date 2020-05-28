@@ -770,28 +770,31 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
        }
     };
     var addToggleableElements = function(widget) {
+
        for (var i = 0; i < widget.modified_lines.length; i++) {
          widget.modified_lines[i]._addToggles();
        }
+
+       console.log("here");
        // toggleable elements are only enabled for unit tests
        if (!widget.options.unittests && !widget.options.vartests) { return; }
        var handlers = $.extend(defaultToggleTypeHandlers, widget.options.toggleTypeHandlers),
            context = $question.find("#" + widget.options.sortableId + ", #" + widget.options.trashId);
-    //    console.log(widget.options.sortableId);
-    //    console.log(widget.options.trashId);
-    //    console.log($("#" + widget.options.sortableId));
-    //    console.log($("#" + widget.options.trashId));
-    //    console.log(context);
+       console.log(widget.options.sortableId);
+       console.log(widget.options.trashId);
+       console.log($("#" + widget.options.sortableId));
+       console.log($("#" + widget.options.trashId));
+       console.log(context);
        $question.find(".jsparson-toggle", context).each(function(index, item) {
          console.log(item);
-          var type = $(item).data("type");
+          var type = $question.find(item).data("type");
           console.log(type);
           if (!type) { return; }
           
           var handler = handlers[type],
               jspOptions;
           if ($.isFunction(handler)) {
-             jspOptions = handler($(item));
+             jspOptions = handler($question.find(item));
           } else {
              jspOptions = handler;
           }
@@ -801,12 +804,12 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
        });
        // register a click handler for all the toggleable elements (and unregister existing)
        context.off("click", ".jsparson-toggle").on("click", ".jsparson-toggle", function() {
-          var $this = $(this),
+          var $this = $question.find(this),
               curVal = $this.text(),
               
               choices = $this.data("jsp-options"),
               newVal = choices[(choices.indexOf(curVal) + 1)%choices.length],
-              $parent = $this.parent("li");
+              $parentt = $this.parent("li");
           
               // clear existing feedback
           widget.clearFeedback();
@@ -814,7 +817,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
           $this.text(newVal);
           // log the event
           widget.addLogEntry({type: "toggle", oldvalue: curVal, newvalue: newVal,
-                            target: $parent[0].id,
+                            target: $parentt[0].id,
                             toggleindex: $parent.find(".jsparson-toggle").index($this)});
        });
     };
@@ -882,7 +885,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
    ParsonsCodeline.prototype.selectedToggleIndex = function(index) {
      if (index < 0 || index >= this._toggles.length) { return -1; }
      var elem = this._toggles[index];
-     var opts = $(elem).data("jsp-options");
+     var opts = $question.find(elem).data("jsp-options");
      return opts.indexOf(elem.textContent);
    };
    // Returns the value of the toggleable element at the given index (0-based)
@@ -1109,12 +1112,12 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
        if (!toggleStates.output) {
          toggleStates.output = [];
        }
-       toggleStates.output.push($(this).text());
+       toggleStates.output.push($question.find(this).text());
      });
      if (this.options.trashId) {
        toggleStates.input = [];
-       $("#" + this.options.trashId + " .jsparson-toggle").each(function() {
-         toggleStates.input.push($(this).text());
+       $question.find("#" + this.options.trashId + " .jsparson-toggle").each(function() {
+         toggleStates.input.push($question.find(this).text());
        });
      }
      if ((toggleStates.output && toggleStates.output.length > 0) ||
@@ -1428,7 +1431,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
         {
           start : function() { that.clearFeedback(); },
           stop : function(event, ui) {
-            if ($(event.target)[0] != ui.item.parent()[0]) {
+            if ($question.find(event.target)[0] != ui.item.parent()[0]) {
               return;
             }
             that.updateIndent(ui.position.left - ui.item.parent().position().left,
@@ -1456,7 +1459,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
               that.addLogEntry({type: "removeOutput", target: ui.item[0].id}, true);
             },
             stop: function(event, ui) {
-              if ($(event.target)[0] != ui.item.parent()[0]) {
+              if ($question.find(event.target)[0] != ui.item.parent()[0]) {
                 // line moved to output and logged there
                 return;
               }
@@ -1502,5 +1505,5 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 }
  // allows _ and $ to be modified with noconflict without changing the globals
  // that parsons uses
- )(H5P.jQuery);
+ )(H5P.jQuery, _);
  

@@ -72,7 +72,15 @@ H5P.ParsonsQuiz = (function ($, ParsonsJS)
                 'sortableId': 'sortable',
                 'trashId': 'sortableTrash',
                 'max_wrong_lines': problem.code.max_wrong_lines,
-                'feedback_cb': displayErrors
+                'vartests': [{initcode: "min = None\na = 0\nb = 2", code: "", message: "Testing with a = 0 ja b = 2", variables: {min: 0}},
+                    {initcode: "min = None\na = 7\nb = 4\n", code: "", message: "Testing with a = 7 ja b = 4",
+                      variables: {min: 4}}],
+                'grader': ParsonsJS.ParsonsWidget._graders.LanguageTranslationGrader,
+                'executable_code': "if $$toggle$$ $$toggle::<::>::!=$$ b:\n" +
+                      "min = a\n" +
+                      "else:\n" +
+                      "min = b\n  pass",
+                'programmingLang': "pseudo"
             });
 
             parson.init(code_line);
