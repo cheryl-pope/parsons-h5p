@@ -32,16 +32,7 @@ H5P.Parsons = (function($, _) {
         var defaults = {
             passPercentage: 50,
             texts: {
-                prevButton: 'Previous question',
-                nextButton: 'Next question',
-                finishButton: 'Finish',
-                textualProgress: 'Question: @current of @total questions',
-                jumpToQuestion: 'Question %d of %total',
-                questionLabel: 'Question',
-                readSpeakerProgress: 'Question @current of @total',
-                unansweredText: 'Unanswered',
-                answeredText: 'Answered',
-                currentQuestionText: 'Current question'
+                finishButton: 'Finish'
             },
             endGame: {
                 showResultPage: true,
@@ -55,12 +46,7 @@ H5P.Parsons = (function($, _) {
                 },
                 overallFeedback: [],
                 finishButtonText: 'Finish',
-                solutionButtonText: 'Show solution',
-                retryButtonText: 'Retry',
-                showAnimations: false,
-                skipButtonText: 'Skip video',
-                showSolutionButton: true,
-                showRetryButton: true
+                solutionButtonText: 'Show solution'
             },
             override: {},
             disableBackwardsNavigation: false
@@ -71,9 +57,7 @@ H5P.Parsons = (function($, _) {
         this.id = id;
         this.content = this.options.content;
         this.$startQ = $('<button/>', { 'class': "startQuiz", 'text': "start Quiz ?" });
-        this.$inner = $('<div/>', {
-            class: "h5p-inner"
-        });
+        this.$inner = $('<div/>', { 'class': "h5p-inner" });
         this.$endQ = $('<button/>', { 'class': "endQuiz", 'text': "submit Quiz " });
         //score create
         this.score = 0;
@@ -306,14 +290,14 @@ H5P.Parsons = (function($, _) {
                 'trashId': 'sortableTrash',
                 'max_wrong_lines': problem.code.max_wrong_lines,
                 'feedback_cb': displayErrors,
-                // 'vartests': [{ initcode: "min = None\na = 0\nb = 2", code: "", message: "Testing with a = 0 ja b = 2", variables: { min: 0 } },
-                //     {
-                //         initcode: "min = None\na = 7\nb = 4\n",
-                //         code: "",
-                //         message: "Testing with a = 7 ja b = 4",
-                //         variables: { min: 4 }
-                //     }
-                // ],
+                'vartests': [{ initcode: "min = None\na = 0\nb = 2", code: "", message: "Testing with a = 0 ja b = 2", variables: { min: 0 } },
+                    {
+                        initcode: "min = None\na = 7\nb = 4\n",
+                        code: "",
+                        message: "Testing with a = 7 ja b = 4",
+                        variables: { min: 4 }
+                    }
+                ],
                 // 'grader': ParsonsWidget._graders.LanguageTranslationGrader,
                 // 'executable_code': "if $$toggle$$ $$toggle::<::>::!=$$ b:\n" +
                 //     "min = a\n" +
@@ -412,8 +396,6 @@ H5P.Parsons = (function($, _) {
             // Trigger finished event.
             self.finals = self.score;
             self.totals = self.Maxscore;
-            // console.log(self.finals);
-            // console.log(self.totals);
             self.success = ((100 * self.finals / self.totals) >= self.options.passPercentage);
 
             console.log(self.success);
@@ -425,8 +407,6 @@ H5P.Parsons = (function($, _) {
         });
         /**start display result setting */
         self.displayResults = function() {
-            // console.log(this.finals);
-            // console.log(self.totals);
             this.triggerXAPICompleted(this.finals, this.totals, this.success);
 
             var eparams = {
@@ -434,8 +414,6 @@ H5P.Parsons = (function($, _) {
                 comment: this.options.endGame.showResultPage ? (this.success ? this.options.endGame.oldFeedback.successGreeting : this.options.endGame.oldFeedback.failGreeting) : undefined,
                 resulttext: this.options.endGame.showResultPage ? (this.success ? this.options.endGame.oldFeedback.successComment : this.options.endGame.oldFeedback.failComment) : undefined,
                 finishButtonText: this.options.endGame.finishButtonText,
-                // solutionButtonText: this.options.endGame.solutionButtonText,
-                // retryButtonText: this.options.endGame.retryButtonText
             };
 
             // Show result page.
@@ -443,26 +421,6 @@ H5P.Parsons = (function($, _) {
             this.$container.append(this.endTemplate.render(eparams));
 
             if (this.options.endGame.showResultPage) {
-                // hookUpButton('.qs-solutionbutton', function() {
-                //     showSolutions();
-                //     this.$container.children().hide().filter('.questionset').show();
-                //     _showQuestion(this.options.initialQuestion);
-                // });
-                // hookUpButton('.qs-retrybutton', function() {
-                //     resetTask();
-                //     this.$container.children().hide();
-
-                //     var $intro = $('.intro-page', this.$container);
-                //     if ($intro.length) {
-                //         // Show intro
-                //         $('.intro-page', this.$container).show();
-                //         $('.qs-startbutton', this.$container).focus();
-                //     } else {
-                //         // Show first question
-                //         $('.questionset', this.$container).show();
-                //         _showQuestion(this.options.initialQuestion);
-                //     }
-                // });
                 scoreBar = this.scoreBar;
                 if (scoreBar === undefined) {
                     scoreBar = H5P.JoubelUI.createScoreBar(this.totals);
@@ -495,29 +453,6 @@ H5P.Parsons = (function($, _) {
         /**end display result setting */
 
 
-
-
-
-
-
-        //this.$inner.append(parson.$parsonswidget);
-        //this.$parsonswidget = parson.$parsonswidget;
-
-
-        //self.$inner = $container.find(".h5p-parsons");
-        //$container.append(this.parson.$parsonswidget);
-
-        // this.$variablecheckgrader = graders.VariableCheckGrader.$VariableCheckGrader;
-        //this.$variablecheckgrader.appendTo($graders);
-        // console.log(this.$parsonswidget.children());
-        // this.$parsonswidget.find("#ul-sortableTrash").find('li').draggable();
-        // var that = this.$parsonswidget.find("#ul-sortable");
-        // this.$parsonswidget.find("#ul" + this.TrashId).droppable({
-        //     drag: function(event, ui) {
-        //         $(that).addClass("ui-droppable");
-        //     }
-
-        // });
 
     };
     H5P.Parsons = ParsonsWidget;

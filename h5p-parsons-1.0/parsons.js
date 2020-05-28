@@ -150,7 +150,7 @@ var H5P = H5P || {};
             try {
                 execResult = this._python_exec(code);
             } catch (e) {
-                return { "_output": output, "_error": "" + e };
+                return { "output": output, "error": "" + e };
             }
             mainmod = execResult.mainmod;
             for (var i = 0; i < variables.length; i++) {
@@ -868,8 +868,8 @@ var H5P = H5P || {};
                         JSON.stringify(opts).replace("<", "&lt;") + "'></span>");
 
                 }
-                console.log("i am in the _addToggle function: ");
-                console.log(html);
+                // console.log("i am in the _addToggle function: ");
+                // console.log(html);
                 this.elem().html(html);
                 this.elem().find(".jsparson-toggle").each(function(_index, item) {
                     that._toggles.push(item);
