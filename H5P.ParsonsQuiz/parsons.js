@@ -818,7 +818,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
           // log the event
           widget.addLogEntry({type: "toggle", oldvalue: curVal, newvalue: newVal,
                             target: $parentt[0].id,
-                            toggleindex: $parent.find(".jsparson-toggle").index($this)});
+                            toggleindex: $question.find(".jsparson-toggle").index($this)});
        });
     };
  
