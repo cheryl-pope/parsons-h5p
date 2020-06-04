@@ -6,7 +6,7 @@ function H() {
 	};
 	return x
 }
-( function() {
+( function(ParsonsJS) {
 	function x(b) {
 		b = b.split(/ /g);
 		var a = {};
@@ -599,10 +599,10 @@ function H() {
 		}
 		f()
 	}
-	window.PR_normalizedHtml = z;
-	window.prettyPrintOne = T;
-	window.prettyPrint = wa;
-	window.PR = {
+	ParsonsJS.PR_normalizedHtml = z;
+	ParsonsJS.prettyPrintOne = T;
+	ParsonsJS.prettyPrint = wa;
+	ParsonsJS.PR = {
 		createSimpleLexer : v,
 		registerLangHandler : q,
 		sourceDecorator : r,
@@ -619,4 +619,4 @@ function H() {
 		PR_TAG : "tag",
 		PR_TYPE : "typ"
 	}
-})();
+})(H5P.jQuery, H5P.ParsonsJS);

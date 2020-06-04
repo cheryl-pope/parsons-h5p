@@ -2,19 +2,16 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
         // Global varies
         var self;
-        $question = $("<div></div>");
+        // $question = $("<div></div>");
 
         /** H5P.ParsonsJS constructor*/
         var ParsonsJS = function(id) {
+            var parsonsJsId = id;
             this.$question = $('<div id=question-' + id + '></div>');
-            $question = this.$question;
+            self = this;
+            // $question = this.$question;
 
         }
-
-
-
-
-        // console.log("succeed");
 
         // the above is used for H5P integration
         // the following is from parsons-js github
@@ -233,11 +230,11 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             var executableCode = "";
             $.each(student_code, function(index, item) {
                 // split codeblocks on br elements
-                var lines = $question.find("#" + item.id).html().split(/<br\s*\/?>/);
+                var lines = self.$question.find("#" + item.id).html().split(/<br\s*\/?>/);
                 // go through all the lines
                 for (var i = 0; i < lines.length; i++) {
                     // add indents and get the text for the line (to remove the syntax highlight html elements)
-                    executableCode += python_indents[item.indent] + $question.find("<span>" + lines[i] + "</span>").text() + "\n";
+                    executableCode += python_indents[item.indent] + self.$question.find("<span>" + lines[i] + "</span>").text() + "\n";
                 }
             });
             // console.log("in _codelinesAsString Function, the executable code is : ", executableCode);
@@ -507,14 +504,14 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                     var isClose = false, // was a new blocks opened on this line
                         isOpen = false, // was a block closed on this line
                         item = student_code[i],
-                        line = $question.find("#" + item.id).text(), // code of the line
+                        line = self.$question.find("#" + item.id).text(), // code of the line
                         topBlock, bO;
 
                     // Check if a proper indentation or the line was found in normalizeIndents
                     // -1 will mean no matching indent was found
                     if (item.indent < 0) {
                         blockErrors.push(this.parson.translations.no_matching(i + 1));
-                        $question.find("#" + item.id).addClass("incorrectIndent");
+                        self.$question.find("#" + item.id).addClass("incorrectIndent");
                         break; // break on error
                     }
 
@@ -527,13 +524,13 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                             topBlock = blocks.pop();
                             if (!topBlock) {
                                 blockErrors.push(this.parson.translations.no_matching_open(i + 1, close[blockClose]));
-                                $question.find("#" + item.id).addClass("incorrectPosition");
+                                self.$question.find("#" + item.id).addClass("incorrectPosition");
                             } else if (close[blockClose] !== topBlock.name) { // incorrect closing block
                                 blockErrors.push(this.parson.translations.block_close_mismatch(i + 1, close[blockClose], topBlock.line, topBlock.name));
-                                $question.find("#" + item.id).addClass("incorrectPosition");
+                                self.$question.find("#" + item.id).addClass("incorrectPosition");
                             } else if (student_code[i].indent !== topBlock.indent) { // incorrect indent
                                 blockErrors.push(this.parson.translations.no_matching(i + 1));
-                                $question.find("#" + item.id).addClass("incorrectIndent");
+                                self.$question.find("#" + item.id).addClass("incorrectIndent");
                             }
                             prevIndent = topBlock ? topBlock.indent : 0;
                             minIndent = 0;
@@ -558,7 +555,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                         if ((prevIndent && student_code[i].indent !== prevIndent) ||
                             student_code[i].indent <= minIndent) {
                             blockErrors.push(this.parson.translations.no_matching(i + 1));
-                            $question.find("#" + item.id).addClass("incorrectIndent");
+                            self.$question.find("#" + item.id).addClass("incorrectIndent");
                         }
                         prevIndent = student_code[i].indent;
                     }
@@ -571,7 +568,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                 // create errors for all blocks opened but not closed
                 for (i = 0; i < blocks.length; i++) {
                     blockErrors.push(this.parson.translations.no_matching_close(blocks[i].line, blocks[i].name));
-                    $question.find("#" + blocks[i].item.id).addClass("incorrectPosition");
+                    self.$question.find("#" + blocks[i].item.id).addClass("incorrectPosition");
                 }
             }
             // if there were errors in the blocks, give feedback and don't execute the code
@@ -734,11 +731,11 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
             // Check the number of lines in student's code
             if (parson.model_solution.length < student_code.length) {
-                $question("#ul-" + elemId).addClass("incorrect");
+                self.$question.find("#ul-" + elemId).addClass("incorrect");
                 errors.push(parson.translations.lines_too_many());
                 log_errors.push({ type: "tooManyLines", lines: student_code.length });
             } else if (parson.model_solution.length > student_code.length) {
-                $question.find("#ul-" + elemId).addClass("incorrect");
+                self.$question.find("#ul-" + elemId).addClass("incorrect");
                 errors.push(parson.translations.lines_missing());
                 log_errors.push({ type: "tooFewLines", lines: student_code.length });
             }
@@ -799,35 +796,37 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             if (!widget.options.unittests && !widget.options.vartests) { return; }
             // console.log($('#' + widget.options.sortableId + ', #' + widget.options.trashId));
             var handlers = $.extend(defaultToggleTypeHandlers, widget.options.toggleTypeHandlers),
-                context = $question.find('#' + widget.options.sortableId + ', #' + widget.options.trashId);
+                context = self.$question.find('#' + widget.options.sortableId + ', #' + widget.options.trashId);
             // console.log(widget.options.sortableId);
             // console.log(widget.options.trashId);
             // console.log($("#" + widget.options.sortableId));
             // console.log($("#" + widget.options.trashId));
             // console.log("the context is: ", context);
-            $("li>.jsparson-toggle", context).each(function(index, item) {
+            self.$question.find("li>.jsparson-toggle", context).each(function(index, item) {
                 // console.log("the item is : ", item);
-                var type = $(item).data("type");
+                var type = self.$question.find(item).data("type");
                 // console.log("the type is: ", type);
-                if (!type) { return; }
+                if (!type) { 
+                    // quit here
+                    return; }
 
                 var handler = handlers[type],
                     jspOptions;
                 if ($.isFunction(handler)) {
-                    jspOptions = handler($question.find(item));
+                    jspOptions = handler(self.$question.find(item));
                 } else {
                     jspOptions = handler;
                 }
                 if (jspOptions && $.isArray(jspOptions)) {
                     // console.log("the item is------------------>>>>>>>>>. : ", item);
-                    $question.find(item).attr("data-jsp-options", JSON.stringify(jspOptions));
+                    self.$question.find(item).attr("data-jsp-options", JSON.stringify(jspOptions));
                 }
             });
             // register a click handler for all the toggleable elements (and unregister existing)
             context.off("click", ".jsparson-toggle").on("click", ".jsparson-toggle", function() {
                 // console.log("here -----------------");
                 // console.log(this);
-                var $this = $question.find(this),
+                var $this = self.$question.find(this),
                     curVal = $this.text(),
 
                     choices = $this.data("jsp-options"),
@@ -868,7 +867,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
         ParsonsCodeline.prototype.elem = function() {
             // the element will change on shuffle, so we should re-fetch it every time
             // console.log($question.find("#" + this.id));
-            return $question.find("#" + this.id);
+            return self.$question.find("#" + this.id);
         };
         ParsonsCodeline.prototype.markCorrect = function() {
             this.elem().addClass(this.widget.FEEDBACK_STYLES.correctPosition);
@@ -897,10 +896,10 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                         JSON.stringify(opts).replace("<", "&lt;") + "'></span>");
 
                 }
-                $question.find(this.elem()).html(html);
+                self.$question.find(this.elem()).html(html);
                 // console.log("this.element is: ", this.elem())
                 // console.log("the html inside the element is: ", html);
-                $question.find(this.elem()).find(".jsparson-toggle").each(function(index, item) {
+                self.$question.find(this.elem()).find(".jsparson-toggle").each(function(index, item) {
                     that._toggles.push(item);
                     // console.log("the item is------>", item);
 
@@ -922,7 +921,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             if (index < 0 || index >= this._toggles.length) { return -1; }
             var elem = this._toggles[index];
             // console.log("ele is--------------->>>>", elem);
-            var opts = $question.find(elem).data("jsp-options");
+            var opts = self.$question.find(elem).data("jsp-options");
             return opts.indexOf(elem.textContent);
         };
         // Returns the value of the toggleable element at the given index (0-based)
@@ -1100,7 +1099,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
         ParsonsWidget.prototype.getHash = function(searchString) {
             var hash = [],
-                ids = $question.find(searchString).sortable('toArray'),
+                ids = self.$question.find(searchString).sortable('toArray'),
                 line;
             for (var i = 0; i < ids.length; i++) {
                 line = this.getLineById(ids[i]);
@@ -1148,26 +1147,26 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
         ParsonsWidget.prototype._getToggleStates = function() {
             // console.log("i am in the gettogglestate function------->");
             var that = this;
-            var context = $question.find("#" + this.options.sortableId + ", #" + this.options.trashId),
-                toggles = $("span.jsparson-toggle", context),
+            var context = self.$question.find("#" + this.options.sortableId + ", #" + this.options.trashId),
+                toggles = self.$question.find("span.jsparson-toggle", context),
                 toggleStates = {};
             // console.log("this is the context of toggles: ", context);
             // console.log("this is the real toggles: ", toggles);
             // console.log("the length of the toggles is: ", toggles.length);
             // console.log($question.find("#" + that.options.sortableId + " .jsparson-toggle"));
-            $("#" + that.options.sortableId + " .jsparson-toggle").each(function() {
-                var $this = $(this);
+            self.$question.find("#" + that.options.sortableId + " .jsparson-toggle").each(function() {
+                var $this = self.$question.find(this);
                 // console.log($this);
                 // console.log("i am doing sth rule to these toggles!!! ");
                 if (!toggleStates.output) {
                     toggleStates.output = [];
                 }
-                toggleStates.output.push($question.find(this).text());
+                toggleStates.output.push(self.$question.find(this).text());
             });
             if (this.options.trashId) {
                 toggleStates.input = [];
-                $question.find("#" + this.options.trashId + " .jsparson-toggle").each(function() {
-                    toggleStates.input.push($question.find($question.find(this).text()));
+                self.$question.find("#" + this.options.trashId + " .jsparson-toggle").each(function() {
+                    toggleStates.input.push(self.$question.find(self.$question.find(this).text()));
                 });
             }
             if ((toggleStates.output && toggleStates.output.length > 0) ||
@@ -1303,7 +1302,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
         ParsonsWidget.prototype.getModifiedCode = function(search_string) {
             //ids of the the modified code
             var lines_to_return = [],
-                solution_ids = $question.find(search_string).sortable('toArray'),
+                solution_ids = self.$question.find(search_string).sortable('toArray'),
                 i, item;
             for (i = 0; i < solution_ids.length; i++) {
                 item = this.getLineById(solution_ids[i]);
@@ -1382,7 +1381,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             // if answer is correct, mark it in the UI
             if (fb.success) {
                 this.correct = true;
-                $question.find("#ul-" + this.options.sortableId).addClass("correct");
+                self.$question.find("#ul-" + this.options.sortableId).addClass("correct");
             }
             // log the feedback and return; based on the type of grader
             if ('html' in fb) { // unittest/vartests type feedback
@@ -1396,8 +1395,8 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
         ParsonsWidget.prototype.clearFeedback = function() {
             if (this.feedback_exists) {
-                $question.find("#ul-" + this.options.sortableId).removeClass("incorrect correct");
-                var li_elements = $question.find("#ul-" + this.options.sortableId + " li");
+                self.$question.find("#ul-" + this.options.sortableId).removeClass("incorrect correct");
+                var li_elements = self.$question.find("#ul-" + this.options.sortableId + " li");
                 $.each(this.FEEDBACK_STYLES, function(index, value) {
                     li_elements.removeClass(value);
                 });
@@ -1425,7 +1424,8 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
 
         ParsonsWidget.prototype.shuffleLines = function() {
-            // console.log("i am in the shuffleline function");
+            console.log("i am in the shuffleline function");
+            // console.log(this.ParsonsJS.parsonsJsId);
             var permutation = (this.options.permutation ? this.options.permutation : this.getRandomPermutation)(this.modified_lines.length);
             var idlist = [];
             for (var i in permutation) {
@@ -1451,7 +1451,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
         ParsonsWidget.prototype.updateHTMLIndent = function(codelineID) {
             var line = this.getLineById(codelineID);
-            $question.find('#' + codelineID).css("margin-left", this.options.x_indent * line.indent + "px");
+            self.$question.find('#' + codelineID).css("margin-left", this.options.x_indent * line.indent + "px");
         };
 
 
@@ -1474,13 +1474,13 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             if (this.options.trashId) {
                 html = (this.options.trash_label ? '<p>' + this.options.trash_label + '</p>' : '') +
                     this.codeLinesToHTML(trashIDs, this.options.trashId);
-                $question.find("#" + this.options.trashId).html(html);
+                    self.$question.find("#" + this.options.trashId).html(html);
                 html = (this.options.solution_label ? '<p>' + this.options.solution_label + '</p>' : '') +
                     this.codeLinesToHTML(solutionIDs, this.options.sortableId);
-                $question.find("#" + this.options.sortableId).html(html);
+                    self.$question.find("#" + this.options.sortableId).html(html);
             } else {
                 html = this.codeLinesToHTML(solutionIDs, this.options.sortableId);
-                $question.find("#" + this.options.sortableId).html(html);
+                self.$question.find("#" + this.options.sortableId).html(html);
             }
             // if (window.prettyPrint && (this.options.prettyPrint)) {
             if (window.prettyPrint && (typeof(this.options.prettyPrint) === "undefined" || this.options.prettyPrint)) {
@@ -1489,10 +1489,10 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             }
 
             var that = this;
-            var sortable = $question.find("#ul-" + this.options.sortableId).sortable({
+            var sortable = self.$question.find("#ul-" + this.options.sortableId).sortable({
                 start: function() { that.clearFeedback(); },
                 stop: function(event, ui) {
-                    if ($question.find(event.target)[0] != ui.item.parent()[0]) {
+                    if (self.$question.find(event.target)[0] != ui.item.parent()[0]) {
                         return;
                     }
                     that.updateIndent(ui.position.left - ui.item.parent().position().left,
@@ -1510,7 +1510,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             });
             sortable.addClass("output");
             if (this.options.trashId) {
-                var trash = $question.find("#ul-" + this.options.trashId).sortable({
+                var trash = self.$question.find("#ul-" + this.options.trashId).sortable({
                     connectWith: sortable,
                     start: function() { that.clearFeedback(); },
                     receive: function(event, ui) {
@@ -1519,7 +1519,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                         that.addLogEntry({ type: "removeOutput", target: ui.item[0].id }, true);
                     },
                     stop: function(event, ui) {
-                        if ($question.find(event.target)[0] != ui.item.parent()[0]) {
+                        if (self.$question.find(event.target)[0] != ui.item.parent()[0]) {
                             // line moved to output and logged there
                             return;
                         }
@@ -1542,20 +1542,20 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
         //window['ParsonsWidget'] = ParsonsWidget;
 
-        ParsonsJS.trimRegexp = trimRegexp;
-        ParsonsJS.translations = translations;
-        ParsonsJS.graders = graders;
-        ParsonsJS.VariableCheckGrader = VariableCheckGrader;
-        ParsonsJS.TurtleGrader = TurtleGrader;
-        ParsonsJS.UnitTestGrader = UnitTestGrader;
-        ParsonsJS.LanguageTranslationGrader = LanguageTranslationGrader;
-        ParsonsJS.LineBasedGrader = LineBasedGrader;
-        ParsonsJS.langBlocks = langBlocks;
-        ParsonsJS.python_indents = python_indents;
-        ParsonsJS.spaces = spaces;
-        ParsonsJS.defaultToggleTypeHandlers = defaultToggleTypeHandlers;
-        ParsonsJS.addToggleableElements = addToggleableElements;
-        ParsonsJS.ParsonsCodeline = ParsonsCodeline;
+        // ParsonsJS.trimRegexp = trimRegexp;
+        // ParsonsJS.translations = translations;
+        // ParsonsJS.graders = graders;
+        // ParsonsJS.VariableCheckGrader = VariableCheckGrader;
+        // ParsonsJS.TurtleGrader = TurtleGrader;
+        // ParsonsJS.UnitTestGrader = UnitTestGrader;
+        // ParsonsJS.LanguageTranslationGrader = LanguageTranslationGrader;
+        // ParsonsJS.LineBasedGrader = LineBasedGrader;
+        // ParsonsJS.langBlocks = langBlocks;
+        // ParsonsJS.python_indents = python_indents;
+        // ParsonsJS.spaces = spaces;
+        // ParsonsJS.defaultToggleTypeHandlers = defaultToggleTypeHandlers;
+        // ParsonsJS.addToggleableElements = addToggleableElements;
+        // ParsonsJS.ParsonsCodeline = ParsonsCodeline;
         ParsonsJS.ParsonsWidget = ParsonsWidget;
 
         return ParsonsJS;
