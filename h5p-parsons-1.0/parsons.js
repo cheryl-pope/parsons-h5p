@@ -678,7 +678,7 @@ var H5P = H5P || {};
                         lineObject.lisIgnore = true;
                     } else {
                         // The line is part of the solution but there are now
-                        // too many instances of the same line in the student's code
+                        // too many instances of the same line in the  student's code
                         // => Let's just have their correct position to be the same
                         // as the last one actually found in the solution.
                         // LIS computation will handle such duplicates properly and
