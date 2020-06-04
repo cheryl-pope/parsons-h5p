@@ -245,7 +245,7 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
                     "else:\n" +
                     "min = b\n  pass",
                 'programmingLang': "pseudo"
-            });
+            }, i);
 
             self.parsonList.push(parson);
 
@@ -280,14 +280,12 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
         self.$endQ.appendTo(self.$inner);
         $(".endQuiz").click(function() {
             finishTotal = new Date() - startTotal;
-            // console.log(finishTotal);
             /**attach result page */
             // Trigger finished event.
             self.finals = self.score;
             self.totals = self.Maxscore;
             self.success = ((100 * self.finals / self.totals) >= self.options.passPercentage);
 
-            // console.log(self.success);
             self.scoreString = H5P.Question.determineOverallFeedback(self.options.endGame.overallFeedback, self.finals / self.totals);
 
             self.displayResults();
