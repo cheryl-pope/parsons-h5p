@@ -2,6 +2,8 @@ var H5P = H5P || {};
 
 H5P.ParsonsQuiz = (function($, ParsonsJS) {
     function displayErrors(fb) {
+        console.log(fb);
+        console.log("----------->")
         if (fb.errors.length > 0) {
             alert(fb.errors[0]);
         }
@@ -56,67 +58,45 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
         /* this is the part for get random question to the student */
         this.questionInstances = [];
         this.questionOrder; //Stores order of questions to allow resuming of question set
-        /**
-         * Randomizes questions in an array and updates an array containing their order
-         * @param  {array} problems
-         * @return {Object.<array, array>} questionOrdering
-         */
-        this.randomizeQuestionOrdering = function(questions) {
+        // /**
+        //  * Randomizes questions in an array and updates an array containing their order
+        //  * @param  {array} problems
+        //  * @return {Object.<array, array>} questionOrdering
+        //  */
+        // this.randomizeQuestionOrdering = function(questions) {
 
-            // Save the original order of the questions in a multidimensional array [[question0,0],[question1,1]...
-            var questionOrdering = questions.map(function(questionInstance, index) {
-                return [questionInstance, index];
-            });
+        //     // Save the original order of the questions in a multidimensional array [[question0,0],[question1,1]...
+        //     var questionOrdering = questions.map(function(questionInstance, index) {
+        //         return [questionInstance, index];
+        //     });
 
-            // Shuffle the multidimensional array
-            questionOrdering = H5P.shuffleArray(questionOrdering);
+        //     // Shuffle the multidimensional array
+        //     questionOrdering = H5P.shuffleArray(questionOrdering);
 
-            // Retrieve question objects from the first index
-            questions = [];
-            for (var i = 0; i < questionOrdering.length; i++) {
-                questions[i] = questionOrdering[i][0];
-            }
+        //     // Retrieve question objects from the first index
+        //     questions = [];
+        //     for (var i = 0; i < questionOrdering.length; i++) {
+        //         questions[i] = questionOrdering[i][0];
+        //     }
 
-            // Retrieve the new shuffled order from the second index
-            var newOrder = [];
-            for (var j = 0; j < questionOrdering.length; j++) {
+        //     // Retrieve the new shuffled order from the second index
+        //     var newOrder = [];
+        //     for (var j = 0; j < questionOrdering.length; j++) {
 
-                // Use a previous order if it exists
-                if (data.previousState && data.previousState.questionOrder) {
-                    newOrder[j] = questionOrder[questionOrdering[j][1]];
-                } else {
-                    newOrder[j] = questionOrdering[j][1];
-                }
-            }
+        //         // Use a previous order if it exists
+        //         if (data.previousState && data.previousState.questionOrder) {
+        //             newOrder[j] = questionOrder[questionOrdering[j][1]];
+        //         } else {
+        //             newOrder[j] = questionOrdering[j][1];
+        //         }
+        //     }
 
-            // Return the questions in their new order *with* their new indexes
-            return {
-                questions: questions,
-                questionOrder: newOrder
-            };
-        };
-        /**add templates  */
-        this.addTemplate = function() {
-            var resulttemplate =
-                '<div class="questionset-results">' +
-                '  <div class="greeting"><%= message %></div>' +
-                '  <div class="feedback-section">' +
-                '    <div class="feedback-scorebar"></div>' +
-                '    <div class="feedback-text"></div>' +
-                '  </div>' +
-                '  <% if (comment) { %>' +
-                '  <div class="result-header"><%= comment %></div>' +
-                '  <% } %>' +
-                '  <% if (resulttext) { %>' +
-                '  <div class="result-text"><%= resulttext %></div>' +
-                '  <% } %>' +
-                // '  <div class="buttons">' +
-                // solutionButtonTemplate +
-                // retryButtonTemplate +
-                // '  </div>' +
-                '</div>';
-            this.endTemplate = new EJS({ text: resulttemplate });
-        }
+        //     // Return the questions in their new order *with* their new indexes
+        //     return {
+        //         questions: questions,
+        //         questionOrder: newOrder
+        //     };
+        // };
         this.finals;
         this.totals;
         this.scoreString = "";
@@ -124,7 +104,64 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
         this.scoreBar;
         this.addTemplate();
     }
+    /**add templates  */
+    ParsonsQuiz.prototype.addTemplate = function() {
+        var resulttemplate =
+            '<div class="questionset-results">' +
+            '  <div class="greeting"><%= message %></div>' +
+            '  <div class="feedback-section">' +
+            '    <div class="feedback-scorebar"></div>' +
+            '    <div class="feedback-text"></div>' +
+            '  </div>' +
+            '  <% if (comment) { %>' +
+            '  <div class="result-header"><%= comment %></div>' +
+            '  <% } %>' +
+            '  <% if (resulttext) { %>' +
+            '  <div class="result-text"><%= resulttext %></div>' +
+            '  <% } %>' +
+            '</div>';
+        this.endTemplate = new EJS({ text: resulttemplate });
+    }
 
+    /**
+     * Randomizes questions in an array and updates an array containing their order
+     * @param  {array} problems
+     * @return {Object.<array, array>} questionOrdering
+     */
+    ParsonsQuiz.prototype.randomizeQuestionOrdering = function(questions) {
+
+        // Save the original order of the questions in a multidimensional array [[question0,0],[question1,1]...
+        var questionOrdering = questions.map(function(questionInstance, index) {
+            return [questionInstance, index];
+        });
+
+        // Shuffle the multidimensional array
+        questionOrdering = H5P.shuffleArray(questionOrdering);
+
+        // Retrieve question objects from the first index
+        questions = [];
+        for (var i = 0; i < questionOrdering.length; i++) {
+            questions[i] = questionOrdering[i][0];
+        }
+
+        // Retrieve the new shuffled order from the second index
+        var newOrder = [];
+        for (var j = 0; j < questionOrdering.length; j++) {
+
+            // Use a previous order if it exists
+            if (this.data.previousState && this.data.previousState.questionOrder) {
+                newOrder[j] = questionOrder[questionOrdering[j][1]];
+            } else {
+                newOrder[j] = questionOrdering[j][1];
+            }
+        }
+
+        // Return the questions in their new order *with* their new indexes
+        return {
+            questions: questions,
+            questionOrder: newOrder
+        };
+    };
     /**
      * Creates and fills container with content
      * @param  {object} $container Container node
@@ -217,35 +254,111 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
             $("#language-" + i).prepend($("<i class= 'fas fa-globe-asia'> language:  </i> "));
             $("<div/>", { "class": "sortable-code", "id": "sortableTrash" }).appendTo(parsonsjs.$question);
             $("<div/>", { "class": "sortable-code", "id": "sortable" }).appendTo(parsonsjs.$question);
-            $("<div/>", { "css": "clear:both;" }).appendTo(parsonsjs.$question);
-            $('<div/>', { "id": "unittest" }).appendTo(parsonsjs.$question);
+
+
             // 
             // question content
+
             var code_line = problem.code.code_block;
             self.Maxscore += 1;
-            var parson = new ParsonsJS.ParsonsWidget({
-                // 'sortableId': 'sortable',
-                // 'trashId': 'sortableTrash',
-                // 'max_wrong_lines': problem.code.max_wrong_lines,
-                // 'feedback_cb': displayErrors
+            if (problem.fill_in_blank) {
+                //testcase 1 edition
+                var vars_string1 = problem.test_cases.testcase1.variables;
+                var vars_array1 = vars_string1.split(' ');
+                // var var_array = vars_array.split(':');
+                // var var_name = var_array[0];
+                // var var_value = var_array[1];
+                var final1 = {};
+                for (var k = 0; k < vars_array1.length; k++) {
+                    var var_array = vars_array1[k].split(':');
+                    var var_name = var_array[0];
+                    var var_value = var_array[1];
+                    if (parseInt(var_value) != NaN) {
+                        var_value = parseInt(var_value);
+                    }
+                    final1[var_name] = var_value;
+                }
+                //testcase 2 edition
+                var vars_string2 = problem.test_cases.testcase2.variables;
+                var vars_array2 = vars_string2.split(' ');
+                // var var_array = vars_array.split(':');
+                // var var_name = var_array[0];
+                // var var_value = var_array[1];
+                var final2 = {};
+                for (var k = 0; k < vars_array2.length; k++) {
+                    var var_array = vars_array2[k].split(':');
+                    var var_name = var_array[0];
+                    var var_value = var_array[1];
+                    if (parseInt(var_value) != NaN) {
+                        var_value = parseInt(var_value);
+                    }
+                    final2[var_name] = var_value;
+                }
+            }
+            var final_param = {};
+            var default_setting = {
                 'sortableId': 'sortable',
                 'trashId': 'sortableTrash',
                 'max_wrong_lines': 1,
-                'vartests': [{ initcode: "min = None\na = 0\nb = 2", code: "", message: "Testing with a = 0 ja b = 2", variables: { min: 0 } },
-                    {
-                        initcode: "min = None\na = 7\nb = 4\n",
-                        code: "",
-                        message: "Testing with a = 7 ja b = 4",
-                        variables: { min: 4 }
-                    }
-                ],
-                'grader': ParsonsJS.ParsonsWidget._graders.LanguageTranslationGrader,
-                'executable_code': "if $$toggle$$ $$toggle::<::>::!=$$ b:\n" +
-                    "min = a\n" +
-                    "else:\n" +
-                    "min = b\n  pass",
                 'programmingLang': "pseudo"
-            }, i);
+            };
+            if (problem.fill_in_blank) {
+                var fill = {
+                    'vartests': [{
+                            initcode: problem.test_cases.testcase1.initcode,
+                            code: "",
+                            message: problem.test_cases.testcase1.message,
+                            variables: final1
+                        },
+                        {
+                            initcode: problem.test_cases.testcase2.initcode,
+                            code: "",
+                            message: problem.test_cases.testcase2.message,
+                            variables: final2
+                        }
+                    ],
+                    'grader': ParsonsJS.ParsonsWidget._graders.LanguageTranslationGrader,
+                    'executable_code': problem.code.test,
+                    'feedback_cb': displayErrors
+
+                };
+            } else {
+                var normal = { 'feedback_cb': displayErrors };
+            }
+            if (problem.fill_in_blank) {
+                final_param = $.extend({}, default_setting, fill);
+            } else {
+                final_param = $.extend({}, default_setting, normal);
+            }
+
+            var parson = new ParsonsJS.ParsonsWidget(
+                    // {
+                    final_param, i)
+                // 'sortableId': 'sortable',
+                // 'trashId': 'sortableTrash',
+                // 'max_wrong_lines': problem.code.max_wrong_lines,
+                // 'feedback_cb': displayErrors,
+                // 'sortableId': 'sortable',
+                // 'trashId': 'sortableTrash',
+                // 'max_wrong_lines': 1,
+                // 'vartests': [{
+                //         initcode: problem.test_cases.testcase1.initcode,
+                //         code: "",
+                //         message: problem.test_cases.testcase1.message,
+                //         variables: final1
+                //     },
+                //     {
+                //         initcode: problem.test_cases.testcase2.initcode,
+                //         code: "",
+                //         message: problem.test_cases.testcase2.message,
+                //         variables: final2
+                //     }
+                // ],
+                // 'grader': ParsonsJS.ParsonsWidget._graders.LanguageTranslationGrader,
+                // 'executable_code': problem.code.test,
+                // 'programmingLang': "pseudo"
+                // },
+                // i);
 
             self.parsonList.push(parson);
 
@@ -258,6 +371,8 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
             parsonsjs.$question.append($("<p/>", { 'id': "buttons" }));
             $("<a/>", { "class": "instance", "href": "#", "id": "newInstanceLink-" + i, "text": "New instance" }).appendTo(parsonsjs.$question.find("#buttons"));
             $("<a/>", { "class": "feedback", "href": "#", "id": "feedbackLink-" + i, "text": "Get feedback" }).appendTo(parsonsjs.$question.find("#buttons"));
+            $("<div/>", { "css": "clear:both;" }).appendTo(parsonsjs.$question);
+            $('<div/>', { "id": "unittest-" + i }).appendTo(parsonsjs.$question);
         }
         $(".instance").on('click', function(event) {
             var currentId = $(this).attr('id');
@@ -271,10 +386,12 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
             console.log("feedback : " + currentIndex + "is ongoing");
             event.preventDefault();
             var fb = self.parsonList[currentIndex].getFeedback();
+            console.log(fb.html);
+            $("#question-" + currentIndex).find("#unittest-" + currentIndex).html(fb.feedback);
             if (self.parsonList[currentIndex].correct == true) {
                 self.score += 1;
             }
-            if (fb.success) { alert("Good, you solved the assignment!"); }
+            if (fb.success) { alert("Good, you solved this question!"); }
         });
         //submit button to submit the quiz form
         self.$endQ.appendTo(self.$inner);

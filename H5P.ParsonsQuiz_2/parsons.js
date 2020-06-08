@@ -247,10 +247,12 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             $.each(parson.options.vartests, function(index, testdata) {
                 var student_code = studentcode || that._codelinesAsString();
                 var executableCode = (testdata.initcode || "") + "\n" + student_code + "\n" + (testdata.code || "");
+                console.log("testdata.initcode: -------->", testdata.initcode);
                 var variables, expectedVals;
 
                 if ('variables' in testdata) {
                     variables = _.keys(testdata.variables);
+                    console.log("the variables are: -----> ", variables)
                     expectedVals = testdata.variables;
                 } else {
                     variables = [testdata.variable];
@@ -583,6 +585,8 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
             // Replace codelines show with codelines to be executed
             var code = this._replaceCodelines();
+            // code.replace("&lt;", '<').replace("&gt;", '>').replace("&#039;", "'").replace("&quot;", '"');
+
             // run unit tests or variable check grader
             if (this.parson.options.unittests) {
                 return new UnitTestGrader(this.parson).grade(code);
@@ -603,10 +607,16 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                 parson = this.parson,
                 executableCode = parson.options.executable_code;
             if (typeof executableCode === "string") {
+                // executableCode.html(executableCode.html().replace("&lt;", '<').replace("&gt;", '>').replace("&#039;", "'").replace("&quot;", '"'))
+                executableCode = executableCode.replace("&lt;", '<').replace("&gt;", '>').replace("&#039;", "'").replace("&quot;", '"');
+                console.log("executableCode---->", executableCode);
                 executableCode = executableCode.split("\n");
+                // console.log("executableCode: ", executabeCode);
             }
             // replace each line with in solution with the corresponding line in executable code
             var toggleRegexp = new RegExp("\\$\\$toggle(" + parson.options.toggleSeparator + ".*?)?\\$\\$", "g");
+            // EmptyRow[prefix].html(EmptyRow[prefix].html().replace(new RegExp(searchFor, "g"), replaceWith));
+            console.log("toggleRegexp: ", toggleRegexp);
             $.each(student_code, function(index, item) {
                 var ind = parseInt(item.id.replace(parson.id_prefix, ''), 10);
 
@@ -614,15 +624,25 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                 // with $$toggle$$ and there to be as many toggles in executable code than in the
                 // code shown to learner.
                 var execline = executableCode[ind];
+                // execline.replace("&lt;", '<').replace("&gt;", '>').replace("&#039;", "'").replace("&quot;", '"');
+                // var $this = $(this);
+                // var t = $this.text();
+                // $this.html(t.replace('&lt', '<').replace('&gt', '>'));
+                console.log("each line is: ", execline);
                 var toggles = execline.match(toggleRegexp);
+                console.log("toggles", toggles);
                 if (toggles) {
                     for (var i = 0; i < toggles.length; i++) {
                         var opts = toggles[i].substring(10, toggles[i].length - 2).split(parson.options.toggleSeparator);
+
+                        console.log(opts);
                         if (opts.length >= 1 && opts[0] !== "$$") {
                             // replace the toggle content with Python executable version as well
                             execline = execline.replace(toggles[i], opts[item.selectedToggleIndex(i)]);
+                            console.log("if : ", execline);
                         } else { // use the same content for the toggle in Python
                             execline = execline.replace(toggles[i], item.toggleValue(i));
+                            console.log("else: ", execline);
                         }
                     }
                 }
@@ -632,6 +652,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                     executableCodeString += python_indents[item.indent] + execlines[i] + "\n";
                 }
             });
+            console.log("executedcodestring is: ", executableCodeString);
             return executableCodeString;
         };
 
@@ -796,9 +817,10 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
 
                 var type = $('#question-' + widget.widgetId).find(item).data("type");
 
-                if (!type) { 
+                if (!type) {
                     // quit here
-                    return; }
+                    return;
+                }
 
                 var handler = handlers[type],
                     jspOptions;
@@ -932,7 +954,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                 'incorrectSound': false,
                 'x_indent': 50,
                 'can_indent': true,
-                'feedback_cb': false,
+                'feedback_cb': true,
                 'first_error_only': true,
                 'max_wrong_lines': 10,
                 'lang': 'en',
@@ -1126,7 +1148,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
                 toggles = $('#question-' + this.widgetId).find("span.jsparson-toggle", context),
                 toggleStates = {};
             $('#question-' + this.widgetId).find("#" + that.options.sortableId + " .jsparson-toggle").each(function() {
-                
+
                 if (!toggleStates.output) {
                     toggleStates.output = [];
                 }
@@ -1339,9 +1361,10 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
         ParsonsWidget.prototype.getFeedback = function() {
             this.feedback_exists = true;
             var fb = this.grader.grade();
-            if (this.options.feedback_cb) {
-                this.options.feedback_cb(fb); //TODO(petri): what is needed?
-            }
+            // console.log("-------------------->>>>>", fb);
+            // if (this.options.feedback_cb) {
+            //     this.options.feedback_cb(fb); //TODO(petri): what is needed?
+            // }
             // if answer is correct, mark it in the UI
             if (fb.success) {
                 this.correct = true;
@@ -1434,10 +1457,10 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             if (this.options.trashId) {
                 html = (this.options.trash_label ? '<p>' + this.options.trash_label + '</p>' : '') +
                     this.codeLinesToHTML(trashIDs, this.options.trashId);
-                    $('#question-' + this.widgetId).find("#" + this.options.trashId).html(html);
+                $('#question-' + this.widgetId).find("#" + this.options.trashId).html(html);
                 html = (this.options.solution_label ? '<p>' + this.options.solution_label + '</p>' : '') +
                     this.codeLinesToHTML(solutionIDs, this.options.sortableId);
-                    $('#question-' + this.widgetId).find("#" + this.options.sortableId).html(html);
+                $('#question-' + this.widgetId).find("#" + this.options.sortableId).html(html);
             } else {
                 html = this.codeLinesToHTML(solutionIDs, this.options.sortableId);
                 $('#question-' + this.widgetId).find("#" + this.options.sortableId).html(html);
@@ -1451,7 +1474,7 @@ H5P.ParsonsJS = (function($, _) { // wrap in anonymous function to not show some
             var sortable = $('#question-' + this.widgetId).find("#ul-" + this.options.sortableId).sortable({
                 start: function() { that.clearFeedback(); },
                 stop: function(event, ui) {
-                    if ($('#question-' + this.widgetId).find(event.target)[0] != ui.item.parent()[0]) {
+                    if ($(event.target)[0] != ui.item.parent()[0]) {
                         return;
                     }
                     that.updateIndent(ui.position.left - ui.item.parent().position().left,

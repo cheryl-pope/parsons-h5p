@@ -1,13 +1,25 @@
 /** Stylesheet for the puzzles */
 
+.fb {
+    background-color: red;
+    height: 100px;
+}
+
 .sortable-code {
     position: static;
     padding-left: 0px;
     margin-left: 2%;
     float: left;
 }
-#sortableTrash { width: 38%; }
-#sortable { width: 56%; }
+
+#sortableTrash {
+    width: 38%;
+}
+
+#sortable {
+    width: 56%;
+}
+
 .sortable-code ul {
     font-size: 120%;
     font-family: monospace;
@@ -16,29 +28,37 @@
     padding-bottom: 10px;
     padding-left: 0;
     margin-left: 0;
-    border: 1px solid #efefff;;
+    border: 1px solid #efefff;
+    ;
 }
+
 .sortable-code ul:empty {
-  padding-bottom: 30px;
+    padding-bottom: 30px;
 }
-.sortable-code li, .sortable-code li:before, .sortable-code li:after {
-  box-sizing: content-box;
+
+.sortable-code li,
+.sortable-code li:before,
+.sortable-code li:after {
+    box-sizing: content-box;
 }
+
 ul.output {
     background-color: #FFA;
 }
+
 .sortable-code li {
-    -moz-border-radius:10px;
-    -webkit-border-radius:10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
     border-radius: 10px;
-    background-color:#EFEFEF;
-    border:1px solid lightgray;
-    padding:10px;
+    background-color: #EFEFEF;
+    border: 1px solid lightgray;
+    padding: 10px;
     margin-top: 5px;
     white-space: nowrap;
     overflow: hidden;
     cursor: move;
 }
+
 .sortable-code li:hover {
     overflow: visible;
 }
@@ -63,27 +83,45 @@ li.correctIndent {
     border-left: 10px solid green;
 }
 
-li.incorrectPosition, .testcase.fail, .testcase.error {
+li.incorrectPosition,
+.testcase.fail,
+.testcase.error {
     background-color: #FFBABA;
-    border:1px solid red;
+    border: 1px solid red;
 }
 
-li.correctPosition, .testcase.pass {
+li.correctPosition,
+.testcase.pass {
     background-color: #DFF2BF;
-    border:1px solid green;
+    border: 1px solid green;
 }
 
-.testcase { padding: 10px; margin-bottom: 10px;}
-.testcase .msg { font-weight: bold; }
-.testcase .error { color: red;}
-.testcase .feedback { font-weight: bolder;}
-.testcase .fail .expected, .testcase .fail .actual {
-    color: red; 
+.testcase {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.testcase .msg {
+    font-weight: bold;
+}
+
+.testcase .error {
+    color: red;
+}
+
+.testcase .feedback {
     font-weight: bolder;
 }
-.testcase .output { 
-    display: block; 
-    white-space: pre; 
+
+.testcase .fail .expected,
+.testcase .fail .actual {
+    color: red;
+    font-weight: bolder;
+}
+
+.testcase .output {
+    display: block;
+    white-space: pre;
     background-color: #555555;
     color: white;
     font-size: 12px;
@@ -91,7 +129,10 @@ li.correctPosition, .testcase.pass {
     margin: 5px;
     padding: 5px;
 }
+
+
 /** For styling the toggleable elements */
+
 .jsparson-toggle {
     padding: 0 15px;
     display: inline-block;
@@ -101,11 +142,34 @@ li.correctPosition, .testcase.pass {
     min-width: 10px;
     min-height: 15px;
 }
+
 .jsparson-toggle:empty {
     border-color: red;
 }
+
 .jsparson-toggle:empty:before {
     content: "??";
     display: block;
     color: red;
+}
+
+
+/* start quiz and result pages*/
+
+.startquiz {
+    position: absolute;
+    /* align-items: center; */
+    left: 35%;
+    top: 50%;
+    display: inline-block;
+    border: none;
+    padding: 15px 40px;
+    text-align: center;
+    font-size: 30px;
+    font-family: inherit;
+    background-color: #F5F5F5;
+    border-radius: 7px;
+    background-color: white;
+    background-color: #f5f5f5;
+    box-shadow: 4px 5px #00000059;
 }
