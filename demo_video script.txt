@@ -1,0 +1,15 @@
+1. upload the pack
+2. choose and use it
+3. add a drag and drop question
+4. add a fill in blank question
+5. submit
+6. full screen
+7. start quiz
+8. wrong answer
+9. right answer
+10. submit
+11. get feedback
+
+add roles/permissions
+
+login as a student
