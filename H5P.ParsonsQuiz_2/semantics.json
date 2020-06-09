@@ -22,7 +22,7 @@
             "name": "problem",
             "type": "group",
             "fields": [{
-                    "label": "problem title",
+                    "label": "Problem Title",
                     "name": "problem_title",
                     "type": "text",
                     "default": "Hello World"
@@ -31,23 +31,23 @@
                     "label": "Problem Discription",
                     "name": "problem_description",
                     "type": "text",
-                    "default": "create hello world program"
+                    "default": "Create hello world program"
                 },
                 {
-                    "label": "Code",
+                    "label": "Problem Content",
                     "name": "code",
                     "type": "group",
                     "fields": [{
-                            "label": "language",
+                            "label": "Language",
                             "name": "code_language",
                             "type": "select",
                             "options": [{
-                                    "value": "C++",
-                                    "label": "C++"
+                                    "value": "Java",
+                                    "label": "Java"
                                 },
                                 {
                                     "value": "Python",
-                                    "label": "Pyhon"
+                                    "label": "Python"
                                 },
                                 {
                                     "value": "Pseudocode",
@@ -56,7 +56,7 @@
                             ]
                         },
                         {
-                            "label": "code block",
+                            "label": "Code Block",
                             "name": "code_block",
                             "type": "text",
                             "widget": "textarea",
@@ -70,14 +70,14 @@
 
                         },
                         {
-                            "label": "max_wrong_line",
+                            "label": "Max_wrong_line",
                             "name": "max_wrong_line",
-                            "description": "how many wrong lines are allowed",
+                            "description": "How many wrong lines are allowed",
                             "type": "number",
                             "default": 1
                         },
                         {
-                            "label": "python test script",
+                            "label": "Python Test Script",
                             "name": "test",
                             "description": "Please add python executable script here.",
                             "type": "text",
@@ -88,35 +88,36 @@
                 {
                     "name": "fill_in_blank",
                     "type": "boolean",
-                    "label": "Fill in blank  questions",
+                    "label": "Fill-in-blank question",
                     "importance": "low",
-                    "description": "select if it is a fill-in-blank question",
+                    "description": "Select if it is a fill-in-blank question",
                     "default": false
                 },
                 {
                     "label": "Test Cases",
                     "name": "test_cases",
                     "type": "group",
+                    "description": "Please add 2 test cases",
                     "importance": "high",
                     "fields": [{
                             "name": "testcase1",
                             "type": "group",
-                            "label": "testcase1",
+                            "label": "Test Case 1",
                             "importance": "high",
                             "fields": [{
-                                    "label": "initcode",
+                                    "label": "Code Initiation",
                                     "name": "initcode",
                                     "type": "text",
                                     "widget": "textarea"
                                 },
                                 {
-                                    "label": "testing message",
+                                    "label": "Test Description",
                                     "name": "message",
                                     "type": "text",
                                     "widget": "textarea"
                                 },
                                 {
-                                    "label": "variables",
+                                    "label": "Test Results",
                                     "name": "variables",
                                     "type": "text",
                                     "widget": "textarea"
@@ -127,22 +128,22 @@
                         {
                             "name": "testcase2",
                             "type": "group",
-                            "label": "testcase2",
+                            "label": "Test Case 2",
                             "importance": "high",
                             "fields": [{
-                                    "label": "initcode",
+                                    "label": "Code Initiation",
                                     "name": "initcode",
                                     "type": "text",
                                     "widget": "textarea"
                                 },
                                 {
-                                    "label": "message display",
+                                    "label": "Test Description",
                                     "name": "message",
                                     "type": "text",
                                     "widget": "textarea"
                                 },
                                 {
-                                    "label": "variables",
+                                    "label": "Test Results",
                                     "name": "variables",
                                     "type": "text",
                                     "widget": "textarea",
@@ -160,7 +161,7 @@
     {
         "name": "randomQuestions",
         "type": "boolean",
-        "label": "Randomize questions",
+        "label": "Randomize Questions",
         "importance": "low",
         "description": "Enable to randomize the order of questions on display.",
         "default": false
@@ -383,21 +384,6 @@
                 "importance": "low",
                 "default": "Show solution",
                 "description": "Text for the solution button."
-            },
-            {
-                "name": "retryButtonText",
-                "type": "text",
-                "label": "Retry button label",
-                "importance": "low",
-                "default": "Retry",
-                "description": "Text for the retry button."
-            },
-            {
-                "name": "finishButtonText",
-                "type": "text",
-                "label": "Finish button text",
-                "importance": "low",
-                "default": "Finish"
             }
 
         ]
@@ -449,46 +435,6 @@
         "importance": "low",
         "default": "Feedback",
         "common": true
-    },
-    {
-        "name": "behaviour",
-        "type": "group",
-        "label": "Behavioural settings.",
-        "importance": "low",
-        "description": "These options will let you control how the task behaves.",
-        "optional": true,
-        "fields": [{
-                "label": "Enable \"Retry\"",
-                "importance": "low",
-                "name": "enableRetry",
-                "type": "boolean",
-                "default": true
-            },
-            {
-                "label": "Enable \"Show Solution\" button",
-                "importance": "low",
-                "name": "enableSolutionsButton",
-                "type": "boolean",
-                "default": true
-            },
-            {
-                "name": "enableCheckButton",
-                "type": "boolean",
-                "label": "Enable \"Check\" button",
-                "widget": "none",
-                "importance": "low",
-                "default": true,
-                "optional": true
-            },
-            {
-                "label": "Instant feedback",
-                "importance": "low",
-                "name": "instantFeedback",
-                "type": "boolean",
-                "default": false,
-                "optional": true
-            }
-        ]
     },
     {
         "name": "scoreBarLabel",

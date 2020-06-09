@@ -155,21 +155,21 @@ li.correctPosition,
 
 
 /* start quiz and result pages*/
-
-.startquiz {
-    position: absolute;
+.startQuiz {
+    position: absolute !important;
     /* align-items: center; */
-    left: 35%;
-    top: 50%;
-    display: inline-block;
-    border: none;
-    padding: 15px 40px;
-    text-align: center;
-    font-size: 30px;
-    font-family: inherit;
-    background-color: #F5F5F5;
-    border-radius: 7px;
-    background-color: white;
-    background-color: #f5f5f5;
-    box-shadow: 4px 5px #00000059;
+    left: 35% !important;
+    left: 35% !important;
+    top: 50% !important;
+    display: inline-block !important;
+    border: none !important;
+    padding: 15px 40px !important;
+    text-align: center !important;
+    font-size: 30px !important;
+    font-family: inherit !important;
+    background-color: #F5F5F5 !important;
+    border-radius: 7px !important;
+    background-color: white !important;
+    background-color: #f5f5f5 !important;
+    box-shadow: 4px 5px #00000059 !important;
 }

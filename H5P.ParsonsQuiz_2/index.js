@@ -45,7 +45,7 @@ H5P.ParsonsQuiz = (function($, ParsonsJS) {
         this.parsonList = [];
         this.id = id;
         // this.quiz = this.options.quiz;
-        this.$startQ = $('<button/>', { 'class': "startQuiz", 'text': "start Quiz ?" });
+        this.$startQ = $('<button/>', { 'class': "startQuiz", 'text': "	Start Quiz ?" });
         this.$inner = $('<div/>', {
             class: "h5p-inner"
         });
