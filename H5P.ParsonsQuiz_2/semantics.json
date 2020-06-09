@@ -73,14 +73,6 @@
                             "description": "How many wrong lines are allowed",
                             "type": "number",
                             "default": 1
-                        },
-                        {
-                            "label": "Python Test Script",
-                            "name": "test",
-                            "description": "Please add python executable script here.",
-                            "optional":"true", 
-                            "type": "text",
-                            "widget": "textarea"
                         }
                     ]
                 },
@@ -92,36 +84,43 @@
                     "description": "Select if it is a fill-in-blank question",
                     "default": false
                 },
+                
+                {
+                    "label": "Python Test Script",
+                    "name": "test",
+                    "description": "Please add python executable script here.",
+                    "optional":"true", 
+                    "type": "text",
+                    "widget": "textarea"
+                },
                 {
                     "label": "Test Cases",
                     "name": "test_cases",
                     "type": "group",
                     "description": "Please add 2 test cases",
-                    "importance": "low",
                     "fields": [{
                             "name": "testcase1",
                             "type": "group",
                             "label": "Test Case 1",
-                            "importance": "high",
                             "fields": [{
                                     "label": "Code Initiation",
                                     "name": "initcode",
-                                    "optional":"true",
                                     "type": "text",
+                                    "optional":"true", 
                                     "widget": "textarea"
                                 },
                                 {
                                     "label": "Test Description",
                                     "name": "message",
                                     "type": "text",
-                                    "optional":"true",
+                                    "optional":"true", 
                                     "widget": "textarea"
                                 },
                                 {
                                     "label": "Test Results",
                                     "name": "variables",
                                     "type": "text",
-                                    "optional":"true",
+                                    "optional":"true", 
                                     "widget": "textarea"
                                 }
                             ]
@@ -131,26 +130,25 @@
                             "name": "testcase2",
                             "type": "group",
                             "label": "Test Case 2",
-                            "importance": "low",
                             "fields": [{
                                     "label": "Code Initiation",
                                     "name": "initcode",
                                     "type": "text",
-                                    "optional":"true",
+                                    "optional":"true", 
                                     "widget": "textarea"
                                 },
                                 {
                                     "label": "Test Description",
                                     "name": "message",
                                     "type": "text",
-                                    "optional":"true",
+                                    "optional":"true", 
                                     "widget": "textarea"
                                 },
                                 {
                                     "label": "Test Results",
                                     "name": "variables",
                                     "type": "text",
-                                    "optional":"true",
+                                    "optional":"true", 
                                     "widget": "textarea",
                                     "description": "do not include any space in this text"
 
