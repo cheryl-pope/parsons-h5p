@@ -88,7 +88,18 @@
             "machineName": "H5P.Question",
             "majorVersion": "1",
             "minorVersion": "4"
+        },
+        {
+            "machineName": "H5P.Transition",
+            "majorVersion": "1",
+            "minorVersion": "0"
+        },
+        {
+            "machineName": "Drop",
+            "majorVersion": "1",
+            "minorVersion": "0"
         }
+        
     ],
     "editorDependencies": [{
             "machineName": "H5PEditor.RangeList",
@@ -104,6 +115,11 @@
             "machineName": "H5PEditor.Wizard",
             "majorVersion": 1,
             "minorVersion": 2
+        },
+        {
+            "machineName": "H5PEditor.TableList",
+            "majorVersion": 1,
+            "minorVersion": 0
         }
     ]
 
