@@ -1,16 +1,14 @@
 [{
         "label": "Assignment Description",
-        "importance": "high",
         "name": "assignmentDescription",
         "type": "text",
-        "description": "Describe teh main purpose for this assignment ",
+        "description": "Describe the main purpose for this assignment ",
         "default": "This assignment is mainly aim for understanding 'for' loop in python",
         "enterMode": "p"
     },
     {
         "name": "quiz",
         "label": "List of parsons puzzle problems",
-        "importance": "high",
         "type": "list",
         "widgets": [{
             "name": "VerticalTabs",
@@ -80,6 +78,7 @@
                             "label": "Python Test Script",
                             "name": "test",
                             "description": "Please add python executable script here.",
+                            "optional":"true", 
                             "type": "text",
                             "widget": "textarea"
                         }
@@ -98,7 +97,7 @@
                     "name": "test_cases",
                     "type": "group",
                     "description": "Please add 2 test cases",
-                    "importance": "high",
+                    "importance": "low",
                     "fields": [{
                             "name": "testcase1",
                             "type": "group",
@@ -107,6 +106,7 @@
                             "fields": [{
                                     "label": "Code Initiation",
                                     "name": "initcode",
+                                    "optional":"true",
                                     "type": "text",
                                     "widget": "textarea"
                                 },
@@ -114,12 +114,14 @@
                                     "label": "Test Description",
                                     "name": "message",
                                     "type": "text",
+                                    "optional":"true",
                                     "widget": "textarea"
                                 },
                                 {
                                     "label": "Test Results",
                                     "name": "variables",
                                     "type": "text",
+                                    "optional":"true",
                                     "widget": "textarea"
                                 }
                             ]
@@ -129,23 +131,26 @@
                             "name": "testcase2",
                             "type": "group",
                             "label": "Test Case 2",
-                            "importance": "high",
+                            "importance": "low",
                             "fields": [{
                                     "label": "Code Initiation",
                                     "name": "initcode",
                                     "type": "text",
+                                    "optional":"true",
                                     "widget": "textarea"
                                 },
                                 {
                                     "label": "Test Description",
                                     "name": "message",
                                     "type": "text",
+                                    "optional":"true",
                                     "widget": "textarea"
                                 },
                                 {
                                     "label": "Test Results",
                                     "name": "variables",
                                     "type": "text",
+                                    "optional":"true",
                                     "widget": "textarea",
                                     "description": "do not include any space in this text"
 
@@ -163,6 +168,7 @@
         "type": "boolean",
         "label": "Randomize Questions",
         "importance": "low",
+        "optional":"true",
         "description": "Enable to randomize the order of questions on display.",
         "default": false
     },
@@ -299,6 +305,7 @@
                 "type": "text",
                 "label": "Feedback heading",
                 "importance": "low",
+                "optional":"true",
                 "default": "Your result:",
                 "description": "This heading will be displayed at the end of the quiz when the user has answered all questions.",
                 "tags": [
@@ -382,6 +389,7 @@
                 "type": "text",
                 "label": "Solution button label",
                 "importance": "low",
+                "optional":"true",
                 "default": "Show solution",
                 "description": "Text for the solution button."
             }
