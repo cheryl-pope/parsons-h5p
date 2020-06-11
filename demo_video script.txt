@@ -1,15 +1,43 @@
-1. upload the pack
-2. choose and use it
-3. add a drag and drop question
-4. add a fill in blank question
-5. submit
-6. full screen
-7. start quiz
-8. wrong answer
-9. right answer
-10. submit
-11. get feedback
+We first create a fill in the blank type of parsons puzzle which also uses drag and drop function.
 
-add roles/permissions
+This code block creates drag and drop panel of the problem.
 
-login as a student
+The toggle syntax is used to create a blank with options of values for the fill in the blank
+
+The python test script is for testing students' solution. These test cases need to be added for just fill in the blank type.
+so we chose to create a fill in the blank, then add 2 test cases.
+
+
+
+First, we initiate the input variable of the test.
+and we display the test information to the students.
+Then we add the correct results to compare with students outputs.
+
+
+We copy the codes lines. These code lines will be recognised as draggable objects
+
+This is the problem panel from where students drag the objects to the solution panel.
+The students can click the blank to switch values
+
+For the second drag and drop question, the students can drag and drop, and indent the line
+
+After the student finish the question, they can get the feedback. The 2 test cases we added are used to show the student the error they have created. If they solved it successfully, it shows a message of success
+
+The student can submit the quiz and get the result. They can also check the results of all quizzes
+
+Then another student can log and attempt. This time we'll do it correctly
+
+Then we log in as instructor again to check all students attempt
+
+
+
+
+
+
+we haven't added the limit of number of temps at this time. it can be used to improve what we have implemented
+
+
+
+languages choices
+python test script
+does it apply to any platform
