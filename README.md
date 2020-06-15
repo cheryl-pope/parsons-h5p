@@ -38,3 +38,7 @@
   
   - Summary_id_name_week: Summaries sent to our supervisor
   
+  #Note: we didn't delete draft files since it recorded our efforts.
+  
+  Thanks for reading!
+  
